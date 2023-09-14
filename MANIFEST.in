@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include tyre_management *.css
+recursive-include tyre_management *.csv
+recursive-include tyre_management *.html
+recursive-include tyre_management *.ico
+recursive-include tyre_management *.js
+recursive-include tyre_management *.json
+recursive-include tyre_management *.md
+recursive-include tyre_management *.png
+recursive-include tyre_management *.py
+recursive-include tyre_management *.svg
+recursive-include tyre_management *.txt
+recursive-exclude tyre_management *.pyc
