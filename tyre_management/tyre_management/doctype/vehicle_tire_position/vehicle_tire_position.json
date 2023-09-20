@@ -1,0 +1,256 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "POSITION-.YY.-.MM.-.DD.-.#####",
+ "creation": "2023-09-15 11:09:56.304482",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "ref_doctype",
+  "column_break_ypxvr",
+  "time_stamp",
+  "section_break_z4lci",
+  "vehicle_no",
+  "customer",
+  "column_break_ipjd0",
+  "wheels",
+  "section_break_zuplk",
+  "front_left_1",
+  "column_break_wrnqj",
+  "front_right_1",
+  "section_break_az0i0",
+  "middle_left_1",
+  "middle_left_2",
+  "middle_left_3",
+  "middle_left_4",
+  "column_break_stvda",
+  "middle_right_1",
+  "middle_right_2",
+  "middle_right_3",
+  "middle_right_4",
+  "section_break_jakxe",
+  "rear_left_1",
+  "rear_left_2",
+  "rear_left_3",
+  "rear_left_4",
+  "column_break_esl2p",
+  "rear_right_1",
+  "rear_right_2",
+  "rear_right_3",
+  "rear_right_4",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_z4lci",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_no",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "label": "Vehicle No",
+   "options": "ref_doctype",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ref_doctype",
+   "fieldtype": "Link",
+   "label": "Ref Doctype",
+   "options": "DocType"
+  },
+  {
+   "fetch_from": "vehicle_no.wheels",
+   "fieldname": "wheels",
+   "fieldtype": "Int",
+   "label": "Wheels"
+  },
+  {
+   "fieldname": "column_break_ipjd0",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_zuplk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_wrnqj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_az0i0",
+   "fieldtype": "Section Break",
+   "hide_border": 1
+  },
+  {
+   "fieldname": "time_stamp",
+   "fieldtype": "Datetime",
+   "label": "Time Stamp"
+  },
+  {
+   "fieldname": "column_break_ypxvr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_stvda",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_jakxe",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_esl2p",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vehicle_no.customer",
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicle Tire Position",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "middle_left_1",
+   "fieldtype": "Link",
+   "label": "Middle Left 1",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "middle_left_2",
+   "fieldtype": "Link",
+   "label": "Middle Left 2",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "middle_left_3",
+   "fieldtype": "Link",
+   "label": "Middle Left 3",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "middle_right_1",
+   "fieldtype": "Link",
+   "label": "Middle Right 1",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "middle_right_2",
+   "fieldtype": "Link",
+   "label": "Middle Right 2",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "rear_left_1",
+   "fieldtype": "Link",
+   "label": "Rear Left 1",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "rear_left_2",
+   "fieldtype": "Link",
+   "label": "Rear Left 2",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "rear_left_3",
+   "fieldtype": "Link",
+   "label": "Rear Left 3",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "rear_right_1",
+   "fieldtype": "Link",
+   "label": "Rear Right 1",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "rear_right_2",
+   "fieldtype": "Link",
+   "label": "Rear Right 2",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "rear_right_3",
+   "fieldtype": "Link",
+   "label": "Rear Right 3",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "middle_right_3",
+   "fieldtype": "Link",
+   "label": "Middle Right 3",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "middle_left_4",
+   "fieldtype": "Link",
+   "label": "Middle Left 4",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "middle_right_4",
+   "fieldtype": "Link",
+   "label": "Middle Right 4",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "rear_right_4",
+   "fieldtype": "Link",
+   "label": "Rear Right 4",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "rear_left_4",
+   "fieldtype": "Link",
+   "label": "Rear Left 4",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "front_left_1",
+   "fieldtype": "Link",
+   "label": "Front Left 1",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "front_right_1",
+   "fieldtype": "Link",
+   "label": "Front Right 1",
+   "options": "Serial No"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-09-20 18:15:57.942134",
+ "modified_by": "Administrator",
+ "module": "Tyre Management",
+ "name": "Vehicle Tire Position",
+ "name_case": "UPPER CASE",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

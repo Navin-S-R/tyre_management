@@ -1,0 +1,124 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "Maintenance-.YY.-.MM.-.DD.-.#####",
+ "creation": "2023-09-20 18:04:38.088327",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "ref_doctype",
+  "column_break_cngh2",
+  "time_stamp",
+  "section_break_jep4o",
+  "vehicle_no",
+  "customer",
+  "column_break_gkiav",
+  "vehicle_tire_position",
+  "section_break_jdbqc",
+  "maintenance_type",
+  "serial_no",
+  "column_break_amxrn",
+  "tire_position",
+  "cost"
+ ],
+ "fields": [
+  {
+   "fieldname": "ref_doctype",
+   "fieldtype": "Link",
+   "label": "Ref Doctype",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "column_break_cngh2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "time_stamp",
+   "fieldtype": "Datetime",
+   "label": "Time Stamp"
+  },
+  {
+   "fieldname": "section_break_jep4o",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_no",
+   "fieldtype": "Dynamic Link",
+   "label": "Vehicle No",
+   "options": "ref_doctype",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vehicle_no.customer",
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "section_break_jdbqc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "maintenance_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Maintenance Type",
+   "options": "\nPreventive Maintenance\nBreakdown",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tire_position",
+   "fieldtype": "Data",
+   "label": "Tire Position"
+  },
+  {
+   "fieldname": "serial_no",
+   "fieldtype": "Link",
+   "label": "Serial No",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "cost",
+   "fieldtype": "Currency",
+   "label": "Cost"
+  },
+  {
+   "fieldname": "column_break_amxrn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_gkiav",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vehicle_tire_position",
+   "fieldtype": "Link",
+   "label": "Vehicle Tire Position",
+   "options": "Vehicle Tire Position"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-09-20 18:18:36.387943",
+ "modified_by": "Administrator",
+ "module": "Tyre Management",
+ "name": "Tyre Maintenance",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
