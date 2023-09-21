@@ -13,19 +13,18 @@ def get_customer_purchase_type_details(customer):
 			"purchase_rate" : serial_no_doc.purchase_rate,
 			"brand" : serial_no_doc.brand,
 			"tyre_size" : serial_no_doc.tyre_size,
-			"tyre location" : None,
-			"tyre_position" : None,
 			"cost_per_kms" : 0,
-			"Operational date" : None,
+			"operational_date" : None,
 			"operational_end_date" : None,
+			"scarped_date" : None,
 			"preventive_maintenance":[],
 			"breakdown_cost":[],
 			"cummulative_preventive_maintenance_cost" : 0,
 			"cummulative_breakdown_cost":0
 		}
+		data['vehicle_no'] = serial_no_doc.vehicle_no
+		data['operational_date'] = serial_no_doc.installed_datetime
 		if serial_no_doc.tyre_status == "Installed":
-			data['vehicle_no'] = serial_no_doc.vehicle_no
-			data['installed_datetime'] = serial_no_doc.installed_datetime
 			tyre_position_doc = frappe.get_doc("Vehicle Tire Position",{"name":serial_no_doc.vehicle_tire_position})
 			serial_no_fields = [
 				"front_left_1",
@@ -52,6 +51,10 @@ def get_customer_purchase_type_details(customer):
 					data['tyre_position'] = tyre_position.replace("_", " ").capitalize()
 		elif serial_no_doc.tyre_status == "Operation Ended":
 			data['operational_end_date'] = serial_no_doc.operational_end_date
+		elif serial_no_doc.tyre_status == "Scarped":
+			data['scarped_date'] = serial_no_doc.scarped_datetime
+		else:
+			data["tyre_location"] = serial_no_doc.warehose
 
 		breakdown_cost=frappe.get_all("Tyre Maintenance",{"serial_no":serial_no_doc.name,"maintenance_type":"Breakdown"},['time_stamp','vehicle_no','customer','vehicle_tire_position','maintenance_type','serial_no','tire_position','cost'])
 		cost_breakdown_values = [entry['cost'] for entry in breakdown_cost]

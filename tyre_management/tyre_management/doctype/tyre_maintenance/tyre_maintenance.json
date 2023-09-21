@@ -20,7 +20,8 @@
   "serial_no",
   "column_break_amxrn",
   "tire_position",
-  "cost"
+  "cost",
+  "amended_from"
  ],
  "fields": [
   {
@@ -96,11 +97,21 @@
    "fieldtype": "Link",
    "label": "Vehicle Tire Position",
    "options": "Vehicle Tire Position"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Tyre Maintenance",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2023-09-20 18:18:36.387943",
+ "modified": "2023-09-21 12:52:57.003746",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Maintenance",
