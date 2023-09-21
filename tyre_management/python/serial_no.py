@@ -17,4 +17,4 @@ def update_outgoing_rate():
 		serial_numbers = item_details['serial_no'].split('\n')
 		serial_numbers = [serial.strip() for serial in serial_numbers if serial.strip()]
 		if serial['name'] in serial_numbers and item_details['rate']:
-			frappe.db.sql("UPDATE `tabSerial No` SET invoiced_rate = {0} WHERE name = '{1}'", (item_details['rate'], serial['name']))
+			frappe.db.sql("UPDATE `tabSerial No` SET invoiced_rate = {0} WHERE name = '{1}'".format(item_details['rate'], serial['name']))
