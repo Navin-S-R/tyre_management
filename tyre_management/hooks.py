@@ -104,7 +104,12 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
+	"cron": {
+		"*/3 * * * *": [
+			"tyre_management.python.serial_no.update_outgoing_rate"
+		]
+	}
 #	"all": [
 #		"tyre_management.tasks.all"
 #	],
@@ -120,7 +125,7 @@ doc_events = {
 #	"monthly": [
 #		"tyre_management.tasks.monthly"
 #	]
-# }
+}
 
 # Testing
 # -------

@@ -4,13 +4,15 @@ import frappe
 @frappe.whitelist()
 def get_customer_purchase_type_details(customer):
 	tyre_details=[]
-	serial_no_list = frappe.get_all("Serial No",{"item_group":"Tires","status":"Delivered","customer":customer})
+	serial_no_list = frappe.get_all("Serial No",{"item_group":"Tires","status":"Delivered","customer":customer},pluck="name")
 	for serial_no in serial_no_list:
 		serial_no_doc = frappe.get_doc("Serial No",serial_no)
 		data={
+			"purchase_date": serial_no_doc.purchase_date,
 			"delivery_time" : serial_no_doc.delivery_time,
 			"serial_no" : serial_no_doc.name,
 			"purchase_rate" : serial_no_doc.purchase_rate,
+			"selling_rate" : serial_no_doc.invoiced_rate,
 			"brand" : serial_no_doc.brand,
 			"tyre_size" : serial_no_doc.tyre_size,
 			"cost_per_kms" : 0,
@@ -20,7 +22,9 @@ def get_customer_purchase_type_details(customer):
 			"preventive_maintenance":[],
 			"breakdown_cost":[],
 			"cummulative_preventive_maintenance_cost" : 0,
-			"cummulative_breakdown_cost":0
+			"cummulative_breakdown_cost":0,
+			"scarped_cost":0,
+			"total_cummulative_cost":0,
 		}
 		data['vehicle_no'] = serial_no_doc.vehicle_no
 		data['operational_date'] = serial_no_doc.installed_datetime
@@ -54,7 +58,7 @@ def get_customer_purchase_type_details(customer):
 		elif serial_no_doc.tyre_status == "Scarped":
 			data['scarped_date'] = serial_no_doc.scarped_datetime
 		else:
-			data["tyre_location"] = serial_no_doc.warehose
+			data["tyre_location"] = serial_no_doc.warehouse
 
 		breakdown_cost=frappe.get_all("Tyre Maintenance",{"serial_no":serial_no_doc.name,"maintenance_type":"Breakdown"},['time_stamp','vehicle_no','customer','vehicle_tire_position','maintenance_type','serial_no','tire_position','cost'])
 		cost_breakdown_values = [entry['cost'] for entry in breakdown_cost]
@@ -68,6 +72,9 @@ def get_customer_purchase_type_details(customer):
 		data['cummulative_preventive_maintenance_cost'] = cummulative_preventive_maintenance_cost
 	
 		data['preventive_maintenance'] = preventive_maintenance
+
+		data['scarped_cost'] = frappe.db.get_value("Scarp Tyre",{'serial_no':serial_no},'cost')
+		data['total_cummulative_cost'] = data['cummulative_breakdown_cost'] + data['cummulative_preventive_maintenance_cost'] + data['scarped_cost']
 		tyre_details.append(data)
 
 	return tyre_details
