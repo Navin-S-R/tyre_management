@@ -80,7 +80,7 @@ class VehicleTirePosition(Document):
 		]
 		for i in serial_no_fields:
 			check_field = self.get(i)
-			if check_field != None and frappe.db.get_value("Serial No",{"name":check_field},"tyre_status") == "Scarped":
+			if check_field != None and frappe.db.get_value("Serial No",{"name":check_field,"docstatus":1},"tyre_status") == "Scarped":
 				frappe.throw(_(f"{check_field} Tyre Already Scarped"))
 			for j in serial_no_fields:
 				if check_field != None and check_field == self.get(j) and i != j:

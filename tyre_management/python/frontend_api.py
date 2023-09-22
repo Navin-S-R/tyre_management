@@ -1,4 +1,5 @@
 import frappe
+from datetime import datetime
 
 #Get Customer purchased tyre details
 @frappe.whitelist()
@@ -25,6 +26,7 @@ def get_customer_purchase_type_details(customer):
 			"cummulative_breakdown_cost":0,
 			"scarped_cost":0,
 			"total_cummulative_cost":0,
+			"duration_in_operation" : 0
 		}
 		data['vehicle_no'] = serial_no_doc.vehicle_no
 		data['operational_date'] = serial_no_doc.installed_datetime
@@ -60,21 +62,26 @@ def get_customer_purchase_type_details(customer):
 		else:
 			data["tyre_location"] = serial_no_doc.warehouse
 
-		breakdown_cost=frappe.get_all("Tyre Maintenance",{"serial_no":serial_no_doc.name,"maintenance_type":"Breakdown"},['time_stamp','vehicle_no','customer','vehicle_tire_position','maintenance_type','serial_no','tire_position','cost'])
+		breakdown_cost=frappe.get_all("Tyre Maintenance",{"serial_no":serial_no_doc.name,"maintenance_type":"Breakdown","docstatus":1},['time_stamp','vehicle_no','customer','vehicle_tire_position','maintenance_type','serial_no','tire_position','cost'])
 		cost_breakdown_values = [entry['cost'] for entry in breakdown_cost]
 		cummulative_breakdown_cost = sum(cost_breakdown_values)
 		data['breakdown_cost'] = breakdown_cost
 		data['cummulative_breakdown_cost'] = cummulative_breakdown_cost
 
-		preventive_maintenance=frappe.get_all("Tyre Maintenance",{"serial_no":serial_no_doc.name,"maintenance_type":"Preventive Maintenance"},['time_stamp','vehicle_no','customer','vehicle_tire_position','maintenance_type','serial_no','tire_position','cost'])
+		preventive_maintenance=frappe.get_all("Tyre Maintenance",{"serial_no":serial_no_doc.name,"maintenance_type":"Preventive Maintenance","docstatus":1},['time_stamp','vehicle_no','customer','vehicle_tire_position','maintenance_type','serial_no','tire_position','cost'])
 		cost_preventive_maintenance_values = [entry['cost'] for entry in preventive_maintenance]
 		cummulative_preventive_maintenance_cost = sum(cost_preventive_maintenance_values)
 		data['cummulative_preventive_maintenance_cost'] = cummulative_preventive_maintenance_cost
 	
 		data['preventive_maintenance'] = preventive_maintenance
 
-		data['scarped_cost'] = frappe.db.get_value("Scarp Tyre",{'serial_no':serial_no},'cost')
+		data['scarped_cost'] = frappe.db.get_value("Scarp Tyre",{'serial_no':serial_no,"docstatus":1},'cost')
 		data['total_cummulative_cost'] = data['cummulative_breakdown_cost'] + data['cummulative_preventive_maintenance_cost'] + data['scarped_cost']
+		
+		if data.get('operational_date'):
+			to_date = data.get('operational_end_date') if data.get('operational_end_date') else datetime.now()
+			time_difference = data.get('operational_date')-to_date
+			data['duration_in_operation'] = time_difference.days
 		tyre_details.append(data)
 
 	return tyre_details
