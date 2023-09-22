@@ -35,11 +35,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "time_stamp",
-   "fieldtype": "Datetime",
-   "label": "Time Stamp"
-  },
-  {
    "fieldname": "section_break_jep4o",
    "fieldtype": "Section Break"
   },
@@ -106,12 +101,17 @@
    "options": "Tyre Maintenance",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "time_stamp",
+   "fieldtype": "Datetime",
+   "label": "Time Stamp"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-09-21 12:52:57.003746",
+ "modified": "2023-09-22 11:10:52.081242",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Maintenance",

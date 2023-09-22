@@ -82,13 +82,13 @@ def get_customer_purchase_type_details(customer):
 
 		data['preventive_maintenance'] = preventive_maintenance
 
-		scarped_cost=frappe.db.get_value("Scarp Tyre",{'serial_no':serial_no,"docstatus":1},'cost')
+		scarped_cost=frappe.db.get_value("Scarp Tyre",{'serial_no':serial_no,"docstatus":1},'cost') or 0
 		data['scarped_cost'] = scarped_cost
 		data['total_cummulative_cost'] = cummulative_breakdown_cost + cummulative_preventive_maintenance_cost + scarped_cost
-		
+
 		if data.get('operational_date'):
 			to_date = data.get('operational_end_date') if data.get('operational_end_date') else datetime.now()
-			time_difference = data.get('operational_date')-to_date
+			time_difference = to_date-data.get('operational_date')
 			data['duration_in_operation'] = time_difference.days
 		tyre_details.append(data)
 
