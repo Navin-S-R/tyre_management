@@ -27,6 +27,8 @@ def get_customer_purchase_type_details(customer,filter_serial_no=None,filter_is_
 			"erp_serial_no":serial_no_doc.erp_serial_no,
 			"is_smart_tyre" : serial_no_doc.is_smart_tyre,
 			"purchase_date": serial_no_doc.purchase_date,
+			"purchase_time" : serial_no_doc.purchase_time,
+			"delivery_date" : serial_no_doc.delivery_date,
 			"delivery_time" : serial_no_doc.delivery_time,
 			"serial_no" : serial_no_doc.name,
 			"purchase_rate" : serial_no_doc.purchase_rate,
@@ -43,7 +45,8 @@ def get_customer_purchase_type_details(customer,filter_serial_no=None,filter_is_
 			"cummulative_breakdown_cost":0,
 			"scarped_cost":0,
 			"total_cummulative_cost":0,
-			"duration_in_operation" : 0
+			"duration_in_operation" : 0,
+			"kilometer_driven":0,
 		}
 		data['vehicle_no'] = serial_no_doc.vehicle_no
 		data['operational_date'] = serial_no_doc.installed_datetime
@@ -101,12 +104,14 @@ def get_customer_purchase_type_details(customer,filter_serial_no=None,filter_is_
 
 		scarped_cost=frappe.db.get_value("Scarp Tyre",{'serial_no':serial_no,"docstatus":1},'cost') or 0
 		data['scarped_cost'] = scarped_cost
-		data['total_cummulative_cost'] = cummulative_breakdown_cost + cummulative_preventive_maintenance_cost + scarped_cost
+		data['total_cummulative_cost'] = serial_no_doc.invoiced_rate + cummulative_breakdown_cost + cummulative_preventive_maintenance_cost - scarped_cost
 
 		if data.get('operational_date'):
 			to_date = data.get('operational_end_date') if data.get('operational_end_date') else datetime.now()
 			time_difference = to_date-data.get('operational_date')
 			data['duration_in_operation'] = time_difference.days
+		if data['total_cummulative_cost'] and serial_no_doc.kilometer_driven:
+			data['cost_per_kms'] = data['total_cummulative_cost'] / serial_no_doc.kilometer_driven
 		tyre_details.append(data)
 
 	return tyre_details
@@ -119,8 +124,89 @@ def get_customer_linked_tyre_serial_no(customer):
 #Get Customer Linked Vehicle
 def get_customer_linked_vehicle(customer,doctype):
 	if doctype == "Vehicle Registration Certificate":
-		vehicle_list = frappe.get_all("Vehicle Registration Certificate",{"customer":customer},pluck="name")
+		vehicle_list = frappe.get_all("Vehicle Registration Certificate",{"customer":customer,"disabled":0},pluck="name")
 	## To use core vehicle doctype
 	#elif doctype == "Vehicle":
 	#	vehicle_list = frappe.get_all("Vehicle",{"customer",customer},"name")
 	return vehicle_list
+
+#Get Details for Tyre Cards:
+def get_details_tyre_card(customer):
+	data={
+			"avgCost_Km" : 0,
+			"avgMaintainceCost" : 0,
+			"avgBreakdownCost":0,
+			"no_of_vehicles":0,
+			"no_of_smart_tyres":0,
+			"no_of_regular_tyres":0,
+			"no_of_vehicles_with_regular_tyre":0,
+			"no_of_vehicles_with_smart_tyre":0,
+			"no_of_tyres_need_service":0,
+			"no_of_scarped_tyres":0,
+			"vehicles_with_regular_tyre" : [],
+			"vehicles_with_smart_tyre" : []
+		}
+	data['no_of_vehicles'] = len(frappe.get_all("Vehicle Registration Certificate",{"customer":customer,"disabled":0},pluck="name"))
+ 
+	#smart_tyre_list
+	smart_tyre_list = frappe.get_all("Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],
+																"tyre_status":["not in",["Scarped"]],"customer":customer,
+																"is_smart_tyre":1
+																},
+													pluck="name")
+	data["no_of_smart_tyres"] = len(smart_tyre_list)
+	
+	#regular_tyre_list
+	regular_tyre_list = frappe.get_all("Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],
+																"tyre_status":["not in",["Scarped"]],"customer":customer,
+																"is_smart_tyre":0
+																},
+													pluck="name")
+	data["no_of_regular_tyres"] = len(regular_tyre_list)
+ 
+	#scarped_tyre_list
+	scarped_tyre_list = frappe.get_all("Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],
+																"tyre_status":"Scarped","customer":customer,
+																},
+													pluck="name")
+	data["no_of_scarped_tyres"] = len(scarped_tyre_list)
+
+	active_tyres = smart_tyre_list + regular_tyre_list
+	no_of_active_tyres = len(active_tyres)
+
+	#Get Maintaince Cost
+	maintaince_cost_list = frappe.get_all("Tyre Maintenance",{"serial_no":['in',active_tyres],"maintenance_type":"Preventive Maintenance"},pluck='cost')
+	maintaince_cost = sum(maintaince_cost_list) if maintaince_cost_list else 0
+	data['avgMaintainceCost'] = maintaince_cost/no_of_active_tyres
+ 
+	#Get Break Down Cost Cost
+	breakdown_cost_list = frappe.get_all("Tyre Maintenance",{"serial_no":['in',active_tyres],"maintenance_type":"Breakdown"},pluck='cost')
+	breakdown_cost = sum(breakdown_cost_list) if breakdown_cost_list else 0
+	data['avgBreakdownCost'] = breakdown_cost/no_of_active_tyres
+ 
+	#Get avgCost_Km
+	kms_driven_and_rate_details=frappe.get_all("Serial No",{"name":['in',active_tyres]},["kilometer_driven","invoiced_rate"])
+	total_kilometer_driven = sum(item['kilometer_driven'] for item in kms_driven_and_rate_details)
+	total_cost = sum(item['invoiced_rate'] for item in kms_driven_and_rate_details)
+	if total_kilometer_driven:
+		data['avgCost_Km'] = (total_cost+maintaince_cost+breakdown_cost)/total_kilometer_driven
+	else:
+		data['avgCost_Km'] = total_cost+maintaince_cost+breakdown_cost
+	
+	#vehicles_with_regular_tyre
+	vehicles_with_regular_tyre = frappe.get_all("Serial No",{"name":['in',regular_tyre_list],
+																	"vehicle_no":["not in",None]},
+														pluck="vehicle_no",distinct=True)
+	data['vehicles_with_regular_tyre'] = vehicles_with_regular_tyre
+	data['no_of_vehicles_with_regular_tyre'] = len(vehicles_with_regular_tyre)
+	
+	#vehicles_with_smart_tyre
+	vehicles_with_smart_tyre = frappe.get_all("Serial No",{"name":['in',smart_tyre_list],
+																	"vehicle_no":["not in",None]},
+														pluck="vehicle_no",distinct=True)
+	# vehicles_with_only_smart_tyre
+	vehicles_with_only_smart_tyre = [x for x in vehicles_with_smart_tyre if x not in vehicles_with_regular_tyre]
+	data['vehicles_with_smart_tyre'] = vehicles_with_only_smart_tyre
+	data['no_of_vehicles_with_smart_tyre'] = len(vehicles_with_only_smart_tyre)
+	
+	return data
