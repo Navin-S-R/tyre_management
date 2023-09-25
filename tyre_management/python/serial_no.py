@@ -5,10 +5,12 @@ import time
 def validate_serial_no(doc,event):
 	if doc.item_group.lower() in ['tires','tyres','tire','tyre']:
 		if not doc.erp_serial_no:
+			item_details=frappe.db.get_value("Item",{"name":doc.item_code},["tyre_size","is_smart_tyre"],as_dict=True)
 			ym = time.strftime("%y%m")
 			abbr = frappe.get_cached_value('Company',  doc.company,  'abbr')
 			doc.erp_serial_no = parse_naming_series(f'Tyre-{abbr}-{ym}-.#####')
-			doc.tyre_size = frappe.db.get_value("Item",{"name":doc.item_code},"tyre_size")
+			doc.tyre_size = item_details.get('tyre_size')
+			doc.is_smart_tyre = item_details.get('is_smart_tyre')
 
 def update_outgoing_rate():
 	serial_no_list =frappe.get_all("Serial No",{"invoiced_rate":0,"sales_invoice":['not in',None]},['name','sales_invoice','item_code'])

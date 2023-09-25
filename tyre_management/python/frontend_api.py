@@ -3,12 +3,29 @@ from datetime import datetime
 
 #Get Customer purchased tyre details
 @frappe.whitelist()
-def get_customer_purchase_type_details(customer):
+def get_customer_purchase_type_details(customer,filter_serial_no=None,filter_is_smart_tyre=None,filter_vehicle_no=None):
+	#Filters
+	serial_doc_filters={
+		"item_group":"Tires",
+		"customer":customer
+	}
+	if filter_serial_no:
+		serial_doc_filters['name'] = filter_serial_no
+	if filter_is_smart_tyre == 0 or filter_is_smart_tyre == 1:
+		serial_doc_filters['is_smart_tyre'] = filter_is_smart_tyre
+	if filter_vehicle_no:
+		serial_doc_filters['vehicle_no'] = filter_vehicle_no
+	
+	#Get Details
 	tyre_details=[]
-	serial_no_list = frappe.get_all("Serial No",{"item_group":"Tires","status":"Delivered","customer":customer},pluck="name")
+	serial_no_list = frappe.get_all("Serial No",serial_doc_filters,pluck="name")
+	if not serial_no_list:
+		return "No Data Found"
 	for serial_no in serial_no_list:
 		serial_no_doc = frappe.get_doc("Serial No",serial_no)
 		data={
+			"erp_serial_no":serial_no_doc.erp_serial_no,
+			"is_smart_tyre" : serial_no_doc.is_smart_tyre,
 			"purchase_date": serial_no_doc.purchase_date,
 			"delivery_time" : serial_no_doc.delivery_time,
 			"serial_no" : serial_no_doc.name,
@@ -93,3 +110,17 @@ def get_customer_purchase_type_details(customer):
 		tyre_details.append(data)
 
 	return tyre_details
+
+#Get Customer Linked Tyre
+def get_customer_linked_tyre_serial_no(customer):
+	serial_no_list = frappe.get_all("Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],"customer":customer},pluck="name")
+	return serial_no_list
+
+#Get Customer Linked Vehicle
+def get_customer_linked_vehicle(customer,doctype):
+	if doctype == "Vehicle Registration Certificate":
+		vehicle_list = frappe.get_all("Vehicle Registration Certificate",{"customer":customer},pluck="name")
+	## To use core vehicle doctype
+	#elif doctype == "Vehicle":
+	#	vehicle_list = frappe.get_all("Vehicle",{"customer",customer},"name")
+	return vehicle_list
