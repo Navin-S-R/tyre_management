@@ -117,11 +117,13 @@ def get_customer_purchase_type_details(customer,filter_serial_no=None,filter_is_
 	return tyre_details
 
 #Get Customer Linked Tyre
+@frappe.whitelist()
 def get_customer_linked_tyre_serial_no(customer):
 	serial_no_list = frappe.get_all("Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],"customer":customer},pluck="name")
 	return serial_no_list
 
 #Get Customer Linked Vehicle
+@frappe.whitelist()
 def get_customer_linked_vehicle(customer,doctype):
 	if doctype == "Vehicle Registration Certificate":
 		vehicle_list = frappe.get_all("Vehicle Registration Certificate",{"customer":customer,"disabled":0},pluck="name")
@@ -131,6 +133,7 @@ def get_customer_linked_vehicle(customer,doctype):
 	return vehicle_list
 
 #Get Details for Tyre Cards:
+@frappe.whitelist()
 def get_details_tyre_card(customer):
 	data={
 			"avgCost_Km" : 0,
@@ -175,17 +178,17 @@ def get_details_tyre_card(customer):
 	no_of_active_tyres = len(active_tyres)
 
 	#Get Maintaince Cost
-	maintaince_cost_list = frappe.get_all("Tyre Maintenance",{"serial_no":['in',active_tyres],"maintenance_type":"Preventive Maintenance"},pluck='cost')
+	maintaince_cost_list = frappe.get_all("Tyre Maintenance",{"serial_no":['in',active_tyres],"maintenance_type":"Preventive Maintenance","docstatus":1},pluck='cost')
 	maintaince_cost = sum(maintaince_cost_list) if maintaince_cost_list else 0
 	data['avgMaintainceCost'] = maintaince_cost/no_of_active_tyres
  
 	#Get Break Down Cost Cost
-	breakdown_cost_list = frappe.get_all("Tyre Maintenance",{"serial_no":['in',active_tyres],"maintenance_type":"Breakdown"},pluck='cost')
+	breakdown_cost_list = frappe.get_all("Tyre Maintenance",{"serial_no":['in',active_tyres],"maintenance_type":"Breakdown","docstatus":1},pluck='cost')
 	breakdown_cost = sum(breakdown_cost_list) if breakdown_cost_list else 0
 	data['avgBreakdownCost'] = breakdown_cost/no_of_active_tyres
  
 	#Get avgCost_Km
-	kms_driven_and_rate_details=frappe.get_all("Serial No",{"name":['in',active_tyres]},["kilometer_driven","invoiced_rate"])
+	kms_driven_and_rate_details=frappe.get_all("Serial No",{"name":['in',active_tyres],"docstatus":1},["kilometer_driven","invoiced_rate"])
 	total_kilometer_driven = sum(item['kilometer_driven'] for item in kms_driven_and_rate_details)
 	total_cost = sum(item['invoiced_rate'] for item in kms_driven_and_rate_details)
 	if total_kilometer_driven:
