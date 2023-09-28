@@ -27,7 +27,9 @@ class VehicleTirePosition(Document):
 			"rear_left_3",
 			"rear_right_3",
 			"rear_left_4",
-			"rear_right_4"
+			"rear_right_4",
+			"spare_1",
+			"spare_2"
 		]
 		for field in serial_no_fields:
 			if self.get(field):
@@ -76,7 +78,9 @@ class VehicleTirePosition(Document):
 			"rear_left_3",
 			"rear_right_3",
 			"rear_left_4",
-			"rear_right_4"
+			"rear_right_4",
+			"spare_1",
+			"spare_2"
 		]
 		for i in serial_no_fields:
 			check_field = self.get(i)

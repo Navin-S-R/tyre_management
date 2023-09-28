@@ -39,6 +39,9 @@
   "rear_right_2",
   "rear_right_3",
   "rear_right_4",
+  "section_break_lxizg",
+  "spare_1",
+  "spare_2",
   "amended_from"
  ],
  "fields": [
@@ -226,12 +229,28 @@
    "fieldtype": "Link",
    "label": "Front Right 1",
    "options": "Serial No"
+  },
+  {
+   "fieldname": "section_break_lxizg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "spare_1",
+   "fieldtype": "Link",
+   "label": "Spare 1",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "spare_2",
+   "fieldtype": "Link",
+   "label": "Spare 2",
+   "options": "Serial No"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-09-20 18:15:57.942134",
+ "modified": "2023-09-28 14:18:47.507403",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Vehicle Tire Position",
