@@ -17,6 +17,7 @@
   "item_code",
   "warehouse",
   "batch_no",
+  "is_smart_tyre",
   "column_break1",
   "item_name",
   "brand",
@@ -199,6 +200,7 @@
   },
   {
    "bold": 1,
+   "fetch_from": "supplier.supplier_name",
    "fieldname": "supplier_name",
    "fieldtype": "Data",
    "label": "Supplier Name",
@@ -381,11 +383,16 @@
    "fieldname": "enable_manual_change",
    "fieldtype": "Check",
    "label": "Enable Manual Change"
+  },
+  {
+   "fieldname": "is_smart_tyre",
+   "fieldtype": "Data",
+   "label": "Is Smart Tyre"
   }
  ],
  "icon": "fa fa-barcode",
  "links": [],
- "modified": "2023-10-03 16:15:03.324242",
+ "modified": "2023-10-03 16:30:11.742091",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Serial No",
