@@ -18,11 +18,11 @@ def get_customer_purchase_type_details(customer,filter_serial_no=None,filter_is_
 	
 	#Get Details
 	tyre_details=[]
-	serial_no_list = frappe.get_all("Serial No",serial_doc_filters,pluck="name")
+	serial_no_list = frappe.get_all("Tyre Serial No",serial_doc_filters,pluck="name")
 	if not serial_no_list:
 		return "No Data Found"
 	for serial_no in serial_no_list:
-		serial_no_doc = frappe.get_doc("Serial No",serial_no)
+		serial_no_doc = frappe.get_doc("Tyre Serial No",serial_no)
 		data={
 			"erp_serial_no":serial_no_doc.erp_serial_no,
 			"is_smart_tyre" : serial_no_doc.is_smart_tyre,
@@ -119,7 +119,7 @@ def get_customer_purchase_type_details(customer,filter_serial_no=None,filter_is_
 #Get Customer Linked Tyre
 @frappe.whitelist()
 def get_customer_linked_tyre_serial_no(customer):
-	serial_no_list = frappe.get_all("Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],"customer":customer},pluck="name")
+	serial_no_list = frappe.get_all("Tyre Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],"customer":customer},pluck="name")
 	return serial_no_list
 
 #Get Customer Linked Vehicle
@@ -152,7 +152,7 @@ def get_details_tyre_card(customer):
 	data['no_of_vehicles'] = len(frappe.get_all("Vehicle Registration Certificate",{"customer":customer,"disabled":0},pluck="name"))
  
 	#smart_tyre_list
-	smart_tyre_list = frappe.get_all("Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],
+	smart_tyre_list = frappe.get_all("Tyre Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],
 																"tyre_status":["not in",["Scarped"]],"customer":customer,
 																"is_smart_tyre":1
 																},
@@ -160,7 +160,7 @@ def get_details_tyre_card(customer):
 	data["no_of_smart_tyres"] = len(smart_tyre_list)
 	
 	#regular_tyre_list
-	regular_tyre_list = frappe.get_all("Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],
+	regular_tyre_list = frappe.get_all("Tyre Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],
 																"tyre_status":["not in",["Scarped"]],"customer":customer,
 																"is_smart_tyre":0
 																},
@@ -168,7 +168,7 @@ def get_details_tyre_card(customer):
 	data["no_of_regular_tyres"] = len(regular_tyre_list)
  
 	#scarped_tyre_list
-	scarped_tyre_list = frappe.get_all("Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],
+	scarped_tyre_list = frappe.get_all("Tyre Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],
 																"tyre_status":"Scarped","customer":customer,
 																},
 													pluck="name")
@@ -188,7 +188,7 @@ def get_details_tyre_card(customer):
 	data['avgBreakdownCost'] = breakdown_cost/no_of_active_tyres
  
 	#Get avgCost_Km
-	kms_driven_and_rate_details=frappe.get_all("Serial No",{"name":['in',active_tyres],"docstatus":1},["kilometer_driven","invoiced_rate"])
+	kms_driven_and_rate_details=frappe.get_all("Tyre Serial No",{"name":['in',active_tyres],"docstatus":1},["kilometer_driven","invoiced_rate"])
 	total_kilometer_driven = sum(item['kilometer_driven'] for item in kms_driven_and_rate_details)
 	total_cost = sum(item['invoiced_rate'] for item in kms_driven_and_rate_details)
 	if total_kilometer_driven:
@@ -197,14 +197,14 @@ def get_details_tyre_card(customer):
 		data['avgCost_Km'] = total_cost+maintaince_cost+breakdown_cost
 	
 	#vehicles_with_regular_tyre
-	vehicles_with_regular_tyre = frappe.get_all("Serial No",{"name":['in',regular_tyre_list],
+	vehicles_with_regular_tyre = frappe.get_all("Tyre Serial No",{"name":['in',regular_tyre_list],
 																	"vehicle_no":["not in",None]},
 														pluck="vehicle_no",distinct=True)
 	data['vehicles_with_regular_tyre'] = vehicles_with_regular_tyre
 	data['no_of_vehicles_with_regular_tyre'] = len(vehicles_with_regular_tyre)
 	
 	#vehicles_with_smart_tyre
-	vehicles_with_smart_tyre = frappe.get_all("Serial No",{"name":['in',smart_tyre_list],
+	vehicles_with_smart_tyre = frappe.get_all("Tyre Serial No",{"name":['in',smart_tyre_list],
 																	"vehicle_no":["not in",None]},
 														pluck="vehicle_no",distinct=True)
 	# vehicles_with_only_smart_tyre

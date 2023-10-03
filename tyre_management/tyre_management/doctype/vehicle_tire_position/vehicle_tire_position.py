@@ -33,12 +33,12 @@ class VehicleTirePosition(Document):
 		]
 		for field in serial_no_fields:
 			if self.get(field):
-				serial_doc_details=frappe.db.get_value("Serial No",{"name":self.get(field)},['name','installed_datetime'],as_dict=True)
+				serial_doc_details=frappe.db.get_value("Tyre Serial No",{"name":self.get(field)},['name','installed_datetime'],as_dict=True)
 				if serial_doc_details.get('name'):
 					values = "SET ref_doctype='{0}', vehicle_no='{1}',vehicle_tire_position='{2}',tyre_status='Installed'".format(self.ref_doctype,self.vehicle_no,self.name)
 					if not serial_doc_details.get('installed_datetime'):
 						values+=",installed_datetime='{0}' ".format(self.time_stamp)
-					frappe.db.sql("""UPDATE `tabSerial No` 
+					frappe.db.sql("""UPDATE `tabTyre Serial No` 
 										{0}
 										where name='{1}'
 								""".format(values,self.get(field)))
@@ -56,7 +56,7 @@ class VehicleTirePosition(Document):
 			if removed_tyres:
 				#Updating the tyre status and operational_end_date
 				for removed_tyre in removed_tyres:
-					frappe.db.sql("UPDATE `tabSerial No` SET operational_end_date='{0}',tyre_status='Operation Ended' WHERE name='{1}'".format(self.time_stamp,removed_tyre))
+					frappe.db.sql("UPDATE `tabTyre Serial No` SET operational_end_date='{0}',tyre_status='Operation Ended' WHERE name='{1}'".format(self.time_stamp,removed_tyre))
 		
 	def validate(self):
 		#Same Serial No validation #Tyre Active in other vehicles
@@ -84,7 +84,7 @@ class VehicleTirePosition(Document):
 		]
 		for i in serial_no_fields:
 			check_field = self.get(i)
-			if check_field != None and frappe.db.get_value("Serial No",{"name":check_field,"docstatus":1},"tyre_status") == "Scarped":
+			if check_field != None and frappe.db.get_value("Tyre Serial No",{"name":check_field,"docstatus":1},"tyre_status") == "Scarped":
 				frappe.throw(_(f"{check_field} Tyre Already Scarped"))
 			for j in serial_no_fields:
 				if check_field != None and check_field == self.get(j) and i != j:
@@ -101,7 +101,7 @@ class VehicleTirePosition(Document):
 			for tire in tire_fields:
 				if not self.get(tire):
 					frappe.throw(_(f"{tire} is not mentioned"))
-				previously_installed_vehicle=frappe.db.get_value("Serial No",{"name":self.get(tire),"tyre_status":"Installed"},"vehicle_no")
+				previously_installed_vehicle=frappe.db.get_value("Tyre Serial No",{"name":self.get(tire),"tyre_status":"Installed"},"vehicle_no")
 				if previously_installed_vehicle and previously_installed_vehicle != self.vehicle_no:
 					frappe.throw(_(f"{previously_installed_vehicle} have same tyre installed"))
 		if self.wheels == 6:
@@ -116,7 +116,7 @@ class VehicleTirePosition(Document):
 			for tire in tire_fields:
 				if not self.get(tire):
 					frappe.throw(_(f"{tire} is not mentioned"))
-				previously_installed_vehicle=frappe.db.get_value("Serial No",{"name":self.tire,"tyre_status":"Installed"},"vehicle_no")
+				previously_installed_vehicle=frappe.db.get_value("Tyre Serial No",{"name":self.tire,"tyre_status":"Installed"},"vehicle_no")
 				if previously_installed_vehicle and previously_installed_vehicle != self.vehicle_no:
 					frappe.throw(_(f"{previously_installed_vehicle} have same tyre installed"))
 
@@ -134,7 +134,7 @@ class VehicleTirePosition(Document):
 			for tire in tire_fields:
 				if not self.get(tire):
 					frappe.throw(_(f"{tire} is not mentioned"))
-				previously_installed_vehicle=frappe.db.get_value("Serial No",{"name":self.tire,"tyre_status":"Installed"},"vehicle_no")
+				previously_installed_vehicle=frappe.db.get_value("Tyre Serial No",{"name":self.tire,"tyre_status":"Installed"},"vehicle_no")
 				if previously_installed_vehicle and previously_installed_vehicle != self.vehicle_no:
 					frappe.throw(_(f"{previously_installed_vehicle} have same tyre installed"))
 
@@ -154,7 +154,7 @@ class VehicleTirePosition(Document):
 			for tire in tire_fields:
 				if not self.get(tire):
 					frappe.throw(_(f"{tire} is not mentioned"))
-				previously_installed_vehicle=frappe.db.get_value("Serial No",{"name":self.tire,"tyre_status":"Installed"},"vehicle_no")
+				previously_installed_vehicle=frappe.db.get_value("Tyre Serial No",{"name":self.tire,"tyre_status":"Installed"},"vehicle_no")
 				if previously_installed_vehicle and previously_installed_vehicle != self.vehicle_no:
 					frappe.throw(_(f"{previously_installed_vehicle} have same tyre installed"))
 		
@@ -176,7 +176,7 @@ class VehicleTirePosition(Document):
 			for tire in tire_fields:
 				if not self.get(tire):
 					frappe.throw(_(f"{tire} is not mentioned"))
-				previously_installed_vehicle=frappe.db.get_value("Serial No",{"name":self.tire,"tyre_status":"Installed"},"vehicle_no")
+				previously_installed_vehicle=frappe.db.get_value("Tyre Serial No",{"name":self.tire,"tyre_status":"Installed"},"vehicle_no")
 				if previously_installed_vehicle and previously_installed_vehicle != self.vehicle_no:
 					frappe.throw(_(f"{previously_installed_vehicle} have same tyre installed"))
 
@@ -200,7 +200,7 @@ class VehicleTirePosition(Document):
 			for tire in tire_fields:
 				if not self.get(tire):
 					frappe.throw(_(f"{tire} is not mentioned"))
-				previously_installed_vehicle=frappe.db.get_value("Serial No",{"name":self.tire,"tyre_status":"Installed"},"vehicle_no")
+				previously_installed_vehicle=frappe.db.get_value("Tyre Serial No",{"name":self.tire,"tyre_status":"Installed"},"vehicle_no")
 				if previously_installed_vehicle and previously_installed_vehicle != self.vehicle_no:
 					frappe.throw(_(f"{previously_installed_vehicle} have same tyre installed"))
 
@@ -228,6 +228,6 @@ class VehicleTirePosition(Document):
 			for tire in tire_fields:
 				if not self.get(tire):
 					frappe.throw(_(f"{tire} is not mentioned"))
-				previously_installed_vehicle=frappe.db.get_value("Serial No",{"name":self.tire,"tyre_status":"Installed"},"vehicle_no")
+				previously_installed_vehicle=frappe.db.get_value("Tyre Serial No",{"name":self.tire,"tyre_status":"Installed"},"vehicle_no")
 				if previously_installed_vehicle and previously_installed_vehicle != self.vehicle_no:
 					frappe.throw(_(f"{previously_installed_vehicle} have same tyre installed"))

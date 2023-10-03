@@ -107,7 +107,7 @@ doc_events = {
 scheduler_events = {
 	"cron": {
 		"*/3 * * * *": [
-			"tyre_management.python.serial_no.update_outgoing_rate"
+			"tyre_management.tyre_management.doctype.tyre_serial_no.tyre_serial_no.update_field_from_serial_no"
 		]
 	}
 #	"all": [

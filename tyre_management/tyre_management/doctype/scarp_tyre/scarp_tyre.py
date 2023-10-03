@@ -7,10 +7,10 @@ from frappe.model.document import Document
 
 class ScarpTyre(Document):
 	def on_submit(self):
-		frappe.db.sql("UPDATE `tabSerial No` SET scarped_datetime='{0}',tyre_status='Scarped' WHERE name='{1}'".format(self.time_stamp,self.serial_no))
+		frappe.db.sql("UPDATE `tabTyre Serial No` SET scarped_datetime='{0}',tyre_status='Scarped' WHERE name='{1}'".format(self.time_stamp,self.serial_no))
 	
 	def validate(self):
-		serial_doc = frappe.get_doc("Serial No",{"name":self.serial_no})
+		serial_doc = frappe.get_doc("Tyre Serial No",{"name":self.serial_no})
 		if serial_doc.operational_end_date and serial_doc.tyre_status == "Operation Ended":
 			serial_no_fields = [
 				"front_left_1",
