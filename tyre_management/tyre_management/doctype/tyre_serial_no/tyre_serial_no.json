@@ -158,20 +158,22 @@
    "read_only_depends_on": "eval:doc.enable_manual_change==0"
   },
   {
+   "fetch_from": "purchase_document_no.posting_date",
    "fieldname": "purchase_date",
    "fieldtype": "Date",
    "label": "Creation Date",
    "no_copy": 1,
    "oldfieldname": "purchase_date",
    "oldfieldtype": "Date",
-   "read_only": 1
+   "read_only_depends_on": "eval:doc.enable_manual_change==0"
   },
   {
+   "fetch_from": "purchase_document_no.posting_time",
    "fieldname": "purchase_time",
    "fieldtype": "Time",
    "label": "Creation Time",
    "no_copy": 1,
-   "read_only": 1
+   "read_only_depends_on": "eval:doc.enable_manual_change==0"
   },
   {
    "fieldname": "purchase_rate",
@@ -181,7 +183,7 @@
    "oldfieldname": "purchase_rate",
    "oldfieldtype": "Currency",
    "options": "Company:company:default_currency",
-   "read_only": 1
+   "read_only_depends_on": "eval:doc.enable_manual_change==0"
   },
   {
    "fieldname": "column_break3",
@@ -226,20 +228,22 @@
    "read_only_depends_on": "eval:doc.enable_manual_change==0"
   },
   {
+   "fetch_from": "delivery_document_no.posting_date",
    "fieldname": "delivery_date",
    "fieldtype": "Date",
    "label": "Delivery Date",
    "no_copy": 1,
    "oldfieldname": "delivery_date",
    "oldfieldtype": "Date",
-   "read_only": 1
+   "read_only_depends_on": "eval:doc.enable_manual_change==0"
   },
   {
+   "fetch_from": "delivery_document_no.posting_time",
    "fieldname": "delivery_time",
    "fieldtype": "Time",
    "label": "Delivery Time",
    "no_copy": 1,
-   "read_only": 1
+   "read_only_depends_on": "eval:doc.enable_manual_change==0"
   },
   {
    "fieldname": "column_break5",
@@ -258,6 +262,7 @@
   },
   {
    "bold": 1,
+   "fetch_from": "customer.customer_name",
    "fieldname": "customer_name",
    "fieldtype": "Data",
    "label": "Customer Name",
@@ -308,7 +313,8 @@
   {
    "fieldname": "invoiced_rate",
    "fieldtype": "Currency",
-   "label": "Invoiced Rate"
+   "label": "Invoiced Rate",
+   "read_only_depends_on": "eval:doc.enable_manual_change==0"
   },
   {
    "fieldname": "section_break_ymfqq",
@@ -379,7 +385,7 @@
  ],
  "icon": "fa fa-barcode",
  "links": [],
- "modified": "2023-10-03 13:09:38.000214",
+ "modified": "2023-10-03 16:15:03.324242",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Serial No",

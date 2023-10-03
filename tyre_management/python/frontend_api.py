@@ -6,7 +6,6 @@ from datetime import datetime
 def get_customer_purchase_type_details(customer,filter_serial_no=None,filter_is_smart_tyre=None,filter_vehicle_no=None):
 	#Filters
 	serial_doc_filters={
-		"item_group":"Tires",
 		"customer":customer
 	}
 	if filter_serial_no:
@@ -119,7 +118,7 @@ def get_customer_purchase_type_details(customer,filter_serial_no=None,filter_is_
 #Get Customer Linked Tyre
 @frappe.whitelist()
 def get_customer_linked_tyre_serial_no(customer):
-	serial_no_list = frappe.get_all("Tyre Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],"customer":customer},pluck="name")
+	serial_no_list = frappe.get_all("Tyre Serial No",{"item_group":"Tires","status":['in',["Delivered","Active","Inactive"]],"customer":customer},pluck="name")
 	return serial_no_list
 
 #Get Customer Linked Vehicle
@@ -152,7 +151,7 @@ def get_details_tyre_card(customer):
 	data['no_of_vehicles'] = len(frappe.get_all("Vehicle Registration Certificate",{"customer":customer,"disabled":0},pluck="name"))
  
 	#smart_tyre_list
-	smart_tyre_list = frappe.get_all("Tyre Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],
+	smart_tyre_list = frappe.get_all("Tyre Serial No",{"status":['in',["Delivered","Active","Inactive"]],
 																"tyre_status":["not in",["Scarped"]],"customer":customer,
 																"is_smart_tyre":1
 																},
@@ -160,7 +159,7 @@ def get_details_tyre_card(customer):
 	data["no_of_smart_tyres"] = len(smart_tyre_list)
 	
 	#regular_tyre_list
-	regular_tyre_list = frappe.get_all("Tyre Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],
+	regular_tyre_list = frappe.get_all("Tyre Serial No",{"status":['in',["Delivered","Active","Inactive"]],
 																"tyre_status":["not in",["Scarped"]],"customer":customer,
 																"is_smart_tyre":0
 																},
@@ -168,7 +167,7 @@ def get_details_tyre_card(customer):
 	data["no_of_regular_tyres"] = len(regular_tyre_list)
  
 	#scarped_tyre_list
-	scarped_tyre_list = frappe.get_all("Tyre Serial No",{"item_group":"Tires","status":['in',["Delivered","Active"]],
+	scarped_tyre_list = frappe.get_all("Tyre Serial No",{"status":['in',["Delivered","Active","Inactive"]],
 																"tyre_status":"Scarped","customer":customer,
 																},
 													pluck="name")
