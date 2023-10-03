@@ -72,7 +72,7 @@
    "fieldname": "serial_no",
    "fieldtype": "Link",
    "label": "Serial No",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "cost",

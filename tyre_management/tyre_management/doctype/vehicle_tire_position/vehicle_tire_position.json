@@ -126,109 +126,109 @@
    "fieldname": "middle_left_1",
    "fieldtype": "Link",
    "label": "Middle Left 1",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "middle_left_2",
    "fieldtype": "Link",
    "label": "Middle Left 2",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "middle_left_3",
    "fieldtype": "Link",
    "label": "Middle Left 3",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "middle_right_1",
    "fieldtype": "Link",
    "label": "Middle Right 1",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "middle_right_2",
    "fieldtype": "Link",
    "label": "Middle Right 2",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "rear_left_1",
    "fieldtype": "Link",
    "label": "Rear Left 1",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "rear_left_2",
    "fieldtype": "Link",
    "label": "Rear Left 2",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "rear_left_3",
    "fieldtype": "Link",
    "label": "Rear Left 3",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "rear_right_1",
    "fieldtype": "Link",
    "label": "Rear Right 1",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "rear_right_2",
    "fieldtype": "Link",
    "label": "Rear Right 2",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "rear_right_3",
    "fieldtype": "Link",
    "label": "Rear Right 3",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "middle_right_3",
    "fieldtype": "Link",
    "label": "Middle Right 3",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "middle_left_4",
    "fieldtype": "Link",
    "label": "Middle Left 4",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "middle_right_4",
    "fieldtype": "Link",
    "label": "Middle Right 4",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "rear_right_4",
    "fieldtype": "Link",
    "label": "Rear Right 4",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "rear_left_4",
    "fieldtype": "Link",
    "label": "Rear Left 4",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "front_left_1",
    "fieldtype": "Link",
    "label": "Front Left 1",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "front_right_1",
    "fieldtype": "Link",
    "label": "Front Right 1",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "section_break_lxizg",
@@ -238,13 +238,13 @@
    "fieldname": "spare_1",
    "fieldtype": "Link",
    "label": "Spare 1",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fieldname": "spare_2",
    "fieldtype": "Link",
    "label": "Spare 2",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   }
  ],
  "index_web_pages_for_search": 1,

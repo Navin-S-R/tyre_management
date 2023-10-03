@@ -19,7 +19,7 @@
    "fieldname": "serial_no",
    "fieldtype": "Link",
    "label": "Serial No",
-   "options": "Serial No"
+   "options": "Tyre Serial No"
   },
   {
    "fetch_from": "vehicle_no.customer",
