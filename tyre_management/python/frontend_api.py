@@ -215,6 +215,7 @@ def get_details_tyre_card(customer):
 
 
 #Get Vehicle related details
+@frappe.whitelist()
 def get_vehicle_related_details(customer,doctype):
 	if doctype == "Vehicle Registration Certificate":
 		vehicle_list = frappe.get_all("Vehicle Registration Certificate",{"customer":customer,"disabled":0},pluck="name")
@@ -232,7 +233,7 @@ def get_vehicle_related_details(customer,doctype):
 				"engine_no" : vehicle_details.get('engine_no') if vehicle_details else None,
 				"date_of_registration" : vehicle_details.get('date_of_registration') if vehicle_details else None,
 				"vehicle_category" : vehicle_details.get('vehicle_category') if vehicle_details else None,
-				"rc_document" : frappe.utils.get_url()+vehicle_details.get('rc_document') if vehicle_details else None,
+				"rc_document" : frappe.utils.get_url()+vehicle_details.get('rc_document') if vehicle_details and vehicle_details.get('rc_document') else None,
 				"insurance_policy_no" : insurance_details.get('policy_no') if insurance_details else None,
 				"insurance_expiry_date" : insurance_details.get('policy_expiry_date') if insurance_details else None
 			})

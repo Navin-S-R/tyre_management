@@ -33,7 +33,7 @@ def update_outgoing_rate():
 #update Serial No
 def update_field_from_serial_no():
 	tyre_str_list=['tires','tyres','tire','tyre','Tires','Tyres','Tire','Tyre']
-	time_change=datetime.timedelta(minutes=190)
+	time_change=datetime.timedelta(minutes=10)
 	start_datetime=(datetime.datetime.now()-time_change)
 	end_datetime = datetime.datetime.now()
 	serial_doc_list = frappe.get_all("Serial No", {

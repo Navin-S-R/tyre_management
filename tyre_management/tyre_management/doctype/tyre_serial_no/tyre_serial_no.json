@@ -385,14 +385,15 @@
    "label": "Enable Manual Change"
   },
   {
+   "default": "0",
    "fieldname": "is_smart_tyre",
-   "fieldtype": "Data",
+   "fieldtype": "Check",
    "label": "Is Smart Tyre"
   }
  ],
  "icon": "fa fa-barcode",
  "links": [],
- "modified": "2023-10-03 16:30:11.742091",
+ "modified": "2023-10-03 17:06:29.824608",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Serial No",
