@@ -97,7 +97,7 @@ app_license = "MIT"
 
 doc_events = {
 	"Serial No" :{
-		"autoname" : "tyre_management.python.serial_no.validate_serial_no"
+		"after_insert" : "tyre_management.python.serial_no.validate_serial_no"
 	}
 }
 
