@@ -51,5 +51,14 @@ def update_field_from_serial_no():
 					tyre_serial_doc.set(field, serial_doc.get(field))
 				else:
 					tyre_serial_doc.save(ignore_permissions=None, ignore_version=True)
+		else:
+			tyre_serial_doc=frappe.new_doc("Tyre Serial No")
+			tyre_serial_doc.enable_manual_change=0
+			serial_doc=frappe.get_doc("Serial No",{"name":serial})
+			serial_doc_fields = [field.fieldname for field in frappe.get_meta("Serial No").fields if not field.fieldname.startswith("column")]
+			for field in serial_doc_fields:
+				tyre_serial_doc.set(field, serial_doc.get(field))
+			else:
+				tyre_serial_doc.save(ignore_permissions=None, ignore_version=True)
 	#update Selling Rate
 	update_outgoing_rate()
