@@ -228,6 +228,8 @@ def get_vehicle_related_details(customer,doctype):
 							as_dict=True)
 			customer_vehicle_details.append({
 				"vehicle_no" : vehicle,
+				"chassis_no" : vehicle_details.get('chassis_no') if vehicle_details else None,
+				"engine_no" : vehicle_details.get('engine_no') if vehicle_details else None,
 				"date_of_registration" : vehicle_details.get('date_of_registration') if vehicle_details else None,
 				"vehicle_category" : vehicle_details.get('vehicle_category') if vehicle_details else None,
 				"rc_document" : frappe.utils.get_url()+vehicle_details.get('rc_document') if vehicle_details else None,
