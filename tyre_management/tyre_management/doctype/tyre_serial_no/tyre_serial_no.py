@@ -59,6 +59,6 @@ def update_field_from_serial_no():
 			for field in serial_doc_fields:
 				tyre_serial_doc.set(field, serial_doc.get(field))
 			else:
-				tyre_serial_doc.save(ignore_permissions=None, ignore_version=True)
+				tyre_serial_doc.save(ignore_permissions=None)
 	#update Selling Rate
 	update_outgoing_rate()

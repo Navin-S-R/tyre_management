@@ -179,11 +179,13 @@ def get_details_tyre_card(customer):
 	#Get Maintaince Cost
 	maintaince_cost_list = frappe.get_all("Tyre Maintenance",{"serial_no":['in',active_tyres],"maintenance_type":"Preventive Maintenance","docstatus":1},pluck='cost')
 	maintaince_cost = sum(maintaince_cost_list) if maintaince_cost_list else 0
+	data['total_maintenance_cost'] = maintaince_cost
 	data['avgMaintainceCost'] = maintaince_cost/no_of_active_tyres
  
 	#Get Break Down Cost Cost
 	breakdown_cost_list = frappe.get_all("Tyre Maintenance",{"serial_no":['in',active_tyres],"maintenance_type":"Breakdown","docstatus":1},pluck='cost')
 	breakdown_cost = sum(breakdown_cost_list) if breakdown_cost_list else 0
+	data['total_breakdown_cost'] = breakdown_cost
 	data['avgBreakdownCost'] = breakdown_cost/no_of_active_tyres
  
 	#Get avgCost_Km
