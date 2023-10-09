@@ -118,7 +118,7 @@ def get_customer_purchase_type_details(customer,filter_serial_no=None,filter_is_
 #Get Customer Linked Tyre
 @frappe.whitelist()
 def get_customer_linked_tyre_serial_no(customer):
-	serial_no_list = frappe.get_all("Tyre Serial No",{"item_group":"Tires","status":['in',["Delivered","Active","Inactive"]],"customer":customer},pluck="name")
+	serial_no_list = frappe.get_all("Tyre Serial No",{"status":['in',["Delivered","Active","Inactive"]],"customer":customer},pluck="name")
 	return serial_no_list
 
 #Get Customer Linked Vehicle
