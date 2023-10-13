@@ -14,9 +14,10 @@ class TyreMaintenance(Document):
 				tyre_position = frappe.get_value("Vehicle Tire Position",{"ref_doctype":self.ref_doctype,
 																			"docstatus" : 1,
 																			"vehicle_no":self.vehicle_no},"name")
-				self.vehicle_tire_position
+				self.vehicle_tire_position = tyre_position
 
 			if self.vehicle_tire_position == tyre_position:
+				position_doc = frappe.get_doc("Vehicle Tire Position",{"name":self.vehicle_tire_position})
 				serial_no_fields = [
 					"front_left_1",
 					"front_right_1",
@@ -40,7 +41,7 @@ class TyreMaintenance(Document):
 					"spare_2"
 				]
 				for field in serial_no_fields:
-					if self.get(field):
+					if position_doc.get(field)==self.serial_no:
 						self.tire_position = field
 			else:
 				frappe.throw("This is not the latest tyre psition for this vehicle")
