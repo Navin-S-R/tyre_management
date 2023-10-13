@@ -18,9 +18,11 @@
   "section_break_jdbqc",
   "maintenance_type",
   "serial_no",
+  "tyre_milage_at_service",
   "column_break_amxrn",
   "tire_position",
   "cost",
+  "nsd_value",
   "amended_from"
  ],
  "fields": [
@@ -60,7 +62,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Maintenance Type",
-   "options": "\nPreventive Maintenance\nBreakdown",
+   "options": "\nPreventive Maintenance\nBreakdown\nPeriodic Checkup",
    "reqd": 1
   },
   {
@@ -106,12 +108,22 @@
    "fieldname": "time_stamp",
    "fieldtype": "Datetime",
    "label": "Time Stamp"
+  },
+  {
+   "fieldname": "nsd_value",
+   "fieldtype": "Float",
+   "label": "NSD Value"
+  },
+  {
+   "fieldname": "tyre_milage_at_service",
+   "fieldtype": "Float",
+   "label": "Tyre Milage At Service"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-09-25 18:58:48.420769",
+ "modified": "2023-10-13 13:12:59.721901",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Maintenance",
