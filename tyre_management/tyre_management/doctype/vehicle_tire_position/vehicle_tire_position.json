@@ -123,6 +123,7 @@
    "read_only": 1
   },
   {
+   "description": "Outer",
    "fieldname": "middle_left_1",
    "fieldtype": "Link",
    "label": "Middle Left 1",
@@ -250,7 +251,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-09-28 14:18:47.507403",
+ "modified": "2023-10-16 14:54:44.207671",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Vehicle Tire Position",

@@ -231,3 +231,39 @@ class VehicleTirePosition(Document):
 				previously_installed_vehicle=frappe.db.get_value("Tyre Serial No",{"name":self.get(tire),"tyre_status":"Installed"},"vehicle_no")
 				if previously_installed_vehicle and previously_installed_vehicle != self.vehicle_no:
 					frappe.throw(_(f"{previously_installed_vehicle} have same tyre installed"))
+
+
+#GET Vehicle Tyre Position
+@frappe.whitelist()
+def get_vehicle_tyre_positions(vehicles):
+	final_data={}
+	serial_no_fields = [
+			"front_left_1",
+			"front_right_1",
+			"middle_left_1",
+			"middle_left_2",
+			"middle_left_3",
+			"middle_left_4",
+			"middle_right_1",
+			"middle_right_2",
+			"middle_right_3",
+			"middle_right_4",
+			"rear_left_1",
+			"rear_left_2",
+			"rear_left_3",
+			"rear_left_4",
+			"rear_right_1",
+			"rear_right_2",
+			"rear_right_3",
+			"rear_right_4",
+			"spare_1",
+			"spare_2"
+		]
+	for vehicle in vehicles:
+		final_data[vehicle]=[]
+		data=frappe.get_all("Vehicle Tire Position",{"vehicle_no": vehicle},serial_no_fields,order_by="modified desc", limit=1)
+		if data:
+			filtered_data = [{key: value for key, value in item.items() if value is not None} for item in data]
+			if filtered_data:
+				final_data[vehicle]=filtered_data[0]
+	return final_data
