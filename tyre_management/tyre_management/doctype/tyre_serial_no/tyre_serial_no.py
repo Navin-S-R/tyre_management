@@ -8,6 +8,7 @@ import time
 import datetime
 from frappe.utils import nowdate
 import json
+from tyre_management.tyre_management.doctype.vehicle_tire_position.vehicle_tire_position import get_vehicle_tyre_positions
 
 
 class TyreSerialNo(Document):
@@ -66,7 +67,27 @@ def update_field_from_serial_no():
 
 
 #Update ODOMETER Value
-def update_odometer_value(**args):
+@frappe.whitelist()
+def update_odometer_value(args):
 	if isinstance(args, str):
 		args = json.loads(args)
-	print(args)
+	for row in args:
+		position_data=get_vehicle_tyre_positions([row.get('plate')])
+		if position_data.get(row.get('plate')):
+			for serial_no in position_data.get(row.get('plate')).values():
+				serial_doc_details = frappe.db.get_value("Tyre Serial No",{"name": serial_no},
+												['odometer_value_at_installation','current_odometer_value','kilometer_driven'],as_dict=True)
+				if serial_doc_details and serial_doc_details.get('odometer_value_at_installation'):
+					distance_driven=row.get('end').get('odo_km')-serial_doc_details.get('odometer_value_at_installation')
+					frappe.db.sql("""
+						Update `tabTyre Serial No` SET 
+							current_odometer_value = {0},kilometer_driven={1}
+						WHERE name='{2}'
+					""".format(row.get('end').get('odo_km'),distance_driven,serial_no))
+				else:
+					frappe.db.sql("""
+						Update `tabTyre Serial No` SET
+							odometer_value_at_installation = {0},
+							current_odometer_value = {0},kilometer_driven=0
+						WHERE name='{1}'
+					""".format(row.get('end').get('odo_km'),serial_no))
