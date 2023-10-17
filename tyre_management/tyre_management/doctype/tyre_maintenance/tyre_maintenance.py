@@ -72,6 +72,8 @@ class TyreMaintenance(Document):
 			for row in response:
 				if row.get('plate') == self.vehicle_no:
 					self.vehicle_odometer_value_at_service = row.get('end').get('odo_km')
+		odometer_value_at_installation=frappe.db.get_value("Tyre Serial No",{"name": self.serial_no},'odometer_value_at_installation')
+		self.tyre_milage_at_service = self.vehicle_odometer_value_at_service - odometer_value_at_installation
 @frappe.whitelist()
 def get_latest_tyre_position_for_vehicle(doctype, vehicle_no):
 	tyre_position = frappe.get_value("Vehicle Tire Position",{"ref_doctype":doctype,"vehicle_no":vehicle_no},"name")

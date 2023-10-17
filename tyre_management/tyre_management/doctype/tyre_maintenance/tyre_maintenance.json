@@ -118,6 +118,7 @@
   },
   {
    "fetch_from": "serial_no.kilometer_driven",
+   "fetch_if_empty": 1,
    "fieldname": "tyre_milage_at_service",
    "fieldtype": "Float",
    "label": "Tyre Milage At Service"
@@ -136,7 +137,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-17 19:11:17.686405",
+ "modified": "2023-10-17 20:02:30.092584",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Maintenance",
