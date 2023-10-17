@@ -126,13 +126,13 @@
    "description": "Outer",
    "fieldname": "middle_left_1",
    "fieldtype": "Link",
-   "label": "Middle Left 1",
+   "label": "Middle Left 1 (Outer)",
    "options": "Tyre Serial No"
   },
   {
    "fieldname": "middle_left_2",
    "fieldtype": "Link",
-   "label": "Middle Left 2",
+   "label": "Middle Left 2 ",
    "options": "Tyre Serial No"
   },
   {
@@ -144,7 +144,7 @@
   {
    "fieldname": "middle_right_1",
    "fieldtype": "Link",
-   "label": "Middle Right 1",
+   "label": "Middle Right 1 (Inner)",
    "options": "Tyre Serial No"
   },
   {
@@ -156,7 +156,7 @@
   {
    "fieldname": "rear_left_1",
    "fieldtype": "Link",
-   "label": "Rear Left 1",
+   "label": "Rear Left 1 (Outer)",
    "options": "Tyre Serial No"
   },
   {
@@ -174,7 +174,7 @@
   {
    "fieldname": "rear_right_1",
    "fieldtype": "Link",
-   "label": "Rear Right 1",
+   "label": "Rear Right 1 (Inner)",
    "options": "Tyre Serial No"
   },
   {
@@ -198,25 +198,25 @@
   {
    "fieldname": "middle_left_4",
    "fieldtype": "Link",
-   "label": "Middle Left 4",
+   "label": "Middle Left 4 (Inner)",
    "options": "Tyre Serial No"
   },
   {
    "fieldname": "middle_right_4",
    "fieldtype": "Link",
-   "label": "Middle Right 4",
+   "label": "Middle Right 4 (Outer)",
    "options": "Tyre Serial No"
   },
   {
    "fieldname": "rear_right_4",
    "fieldtype": "Link",
-   "label": "Rear Right 4",
+   "label": "Rear Right 4 (Outer)",
    "options": "Tyre Serial No"
   },
   {
    "fieldname": "rear_left_4",
    "fieldtype": "Link",
-   "label": "Rear Left 4",
+   "label": "Rear Left 4 (Inner)",
    "options": "Tyre Serial No"
   },
   {
@@ -251,7 +251,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-16 14:54:44.207671",
+ "modified": "2023-10-17 16:50:14.146134",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Vehicle Tire Position",
