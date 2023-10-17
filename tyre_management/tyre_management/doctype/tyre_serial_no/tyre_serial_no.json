@@ -46,6 +46,8 @@
   "section_break_ymfqq",
   "ref_doctype",
   "kilometer_driven",
+  "odometer_value_at_installation",
+  "current_odometer_value",
   "column_break_3yxei",
   "vehicle_no",
   "vehicle_tire_position",
@@ -389,11 +391,21 @@
    "fieldname": "is_smart_tyre",
    "fieldtype": "Check",
    "label": "Is Smart Tyre"
+  },
+  {
+   "fieldname": "odometer_value_at_installation",
+   "fieldtype": "Float",
+   "label": "Odometer Value at installation"
+  },
+  {
+   "fieldname": "current_odometer_value",
+   "fieldtype": "Float",
+   "label": "Current Odometer Value"
   }
  ],
  "icon": "fa fa-barcode",
  "links": [],
- "modified": "2023-10-03 17:06:29.824608",
+ "modified": "2023-10-17 17:14:54.782467",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Serial No",

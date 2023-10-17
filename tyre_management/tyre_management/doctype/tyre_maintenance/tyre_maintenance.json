@@ -15,6 +15,7 @@
   "customer",
   "column_break_gkiav",
   "vehicle_tire_position",
+  "attach_document",
   "section_break_jdbqc",
   "maintenance_type",
   "serial_no",
@@ -118,12 +119,17 @@
    "fieldname": "tyre_milage_at_service",
    "fieldtype": "Float",
    "label": "Tyre Milage At Service"
+  },
+  {
+   "fieldname": "attach_document",
+   "fieldtype": "Attach",
+   "label": "Attach Document"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-13 13:12:59.721901",
+ "modified": "2023-10-17 12:02:38.039240",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Maintenance",
