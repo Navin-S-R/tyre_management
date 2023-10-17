@@ -20,6 +20,7 @@
   "maintenance_type",
   "serial_no",
   "tyre_milage_at_service",
+  "vehicle_odometer_value_at_service",
   "column_break_amxrn",
   "tire_position",
   "cost",
@@ -116,6 +117,7 @@
    "label": "NSD Value"
   },
   {
+   "fetch_from": "serial_no.kilometer_driven",
    "fieldname": "tyre_milage_at_service",
    "fieldtype": "Float",
    "label": "Tyre Milage At Service"
@@ -124,12 +126,17 @@
    "fieldname": "attach_document",
    "fieldtype": "Attach",
    "label": "Attach Document"
+  },
+  {
+   "fieldname": "vehicle_odometer_value_at_service",
+   "fieldtype": "Float",
+   "label": "Vehicle Odometer Value At Service"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-17 12:02:38.039240",
+ "modified": "2023-10-17 19:11:17.686405",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Maintenance",
@@ -145,6 +152,7 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],

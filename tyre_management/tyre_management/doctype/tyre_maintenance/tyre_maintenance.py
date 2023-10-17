@@ -6,6 +6,8 @@ from frappe.model.document import Document
 from frappe.utils import get_site_path,now
 import base64
 from frappe.model.naming import parse_naming_series
+import json
+import requests
 
 class TyreMaintenance(Document):
 	def on_submit(self):
@@ -65,8 +67,30 @@ class TyreMaintenance(Document):
 					self.tire_position = field
 		else:
 			frappe.throw("This is not the latest tyre psition for this vehicle")
-
+		if not self.vehicle_odometer_value_at_service:
+			response=get_odometer_value([self.vehicle_no])
+			for row in response:
+				if row.get('plate') == self.vehicle_no:
+					self.vehicle_odometer_value_at_service = row.get('end').get('odo_km')
 @frappe.whitelist()
 def get_latest_tyre_position_for_vehicle(doctype, vehicle_no):
 	tyre_position = frappe.get_value("Vehicle Tire Position",{"ref_doctype":doctype,"vehicle_no":vehicle_no},"name")
 	return tyre_position
+
+
+@frappe.whitelist()
+def get_odometer_value(vehicle_no):
+	url = "http://service.lnder.in/api/method/tyre_management_connector.python.intangles_api.get_intangles_odometer_data"
+	payload = json.dumps({
+		"vehicle_no": vehicle_no
+	})
+	headers = {
+		'Authorization': 'token 4567d5a4c58d5ba:50f7dcc70df884f',
+		'Content-Type': 'application/json'
+	}
+	response = requests.request("GET", url, headers=headers, data=payload)
+	if response.ok:
+		response=response.json().get('message')
+		return response
+	else:
+		response.raise_for_status()
