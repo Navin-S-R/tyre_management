@@ -28,7 +28,7 @@ class TyreMaintenance(Document):
 				file_doc.attached_to_doctype = self.doctype
 				file_doc.attached_to_name = self.name
 				file_doc.insert(ignore_permissions=True)
-				self.attachment = file_doc.file_url
+				self.attach_document = file_doc.file_url
 	def validate(self):
 		if not self.vehicle_tire_position:
 			tyre_position = frappe.get_value("Vehicle Tire Position",{"ref_doctype":self.ref_doctype,

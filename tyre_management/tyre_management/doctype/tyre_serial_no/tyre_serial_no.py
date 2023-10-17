@@ -7,6 +7,7 @@ from frappe.model.naming import parse_naming_series
 import time
 import datetime
 from frappe.utils import nowdate
+import json
 
 
 class TyreSerialNo(Document):
@@ -62,3 +63,10 @@ def update_field_from_serial_no():
 				tyre_serial_doc.save(ignore_permissions=None)
 	#update Selling Rate
 	update_outgoing_rate()
+
+
+#Update ODOMETER Value
+def update_odometer_value(**args):
+	if isinstance(args, str):
+		args = json.loads(args)
+	print(args)
