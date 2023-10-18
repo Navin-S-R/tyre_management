@@ -246,19 +246,22 @@ def get_tyres_need_service_nsd_based(customer):
 						current_odometer_value = row.get('current_odometer_value')
 					if row.get('tyre_serial_no'):
 						tyre_serial_details=frappe.db.get_value("Tyre Serial No",{"name": row.get('tyre_serial_no')},['odometer_value_at_installation'],as_dict=True)
-						last_periodic_check_kms = frappe.db.get_value("Tyre Maintenance",{"name": row.get('tyre_serial_no'),
+						tyre_maintenance_details = frappe.db.get_value("Tyre Maintenance",{"name": row.get('tyre_serial_no'),
 											"maintenance_type":"Periodic Checkup","docstatus":1},
-								'vehicle_odometer_value_at_service')
-						if last_periodic_check_kms:
-							kms_driven_without_checkup=current_odometer_value-last_periodic_check_kms
+								['vehicle_odometer_value_at_service','nsd_value'],as_dict=True)
+						if tyre_maintenance_details.get('vehicle_odometer_value_at_service'):
+							kms_driven_without_checkup=current_odometer_value-tyre_maintenance_details.get('vehicle_odometer_value_at_service')
+							nsd_value = tyre_maintenance_details.get('vehicle_odometer_value_at_service') or 0
 						else:
 							kms_driven_without_checkup=current_odometer_value-tyre_serial_details.get('odometer_value_at_installation')
+							nsd_value = 30
 						if kms_driven_without_checkup and kms_driven_without_checkup >= 10000:
 							final_data.append({
 								'vehicle_no' : key,
 								'tyre_serial_no' : row.get('tyre_serial_no'),
 								'tyre_pressure' : row.get('Pres'),
 								'tyre_temperature' : row.get('Temp'),
+								'nsd_value' : nsd_value,
 								'kms_travelled_without_checkup' : kms_driven_without_checkup,
 								'total_tyre_mileage' : current_odometer_value-tyre_serial_details.get('odometer_value_at_installation')
 							})
