@@ -219,6 +219,8 @@ def get_fleet_tyre_details_card(customer):
 	
 	return data
 
+#Get Service Required Tyres Based on NSD
+@frappe.whitelist()
 def get_tyres_need_service_nsd_based(customer):
 	linked_vehicles=get_customer_linked_vehicle(customer,"Vehicle Registration Certificate")
 	final_data=[]
@@ -263,3 +265,5 @@ def get_tyres_need_service_nsd_based(customer):
 			return final_data
 		else:
 			return response.raise_for_status()
+	else:
+		return "No Vehicle Linked"
