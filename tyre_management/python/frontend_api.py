@@ -1,5 +1,10 @@
 import frappe
 from datetime import datetime
+import requests
+import json
+
+
+from tyre_management.tyre_management.doctype.vehicle_tire_position.vehicle_tire_position import get_vehicle_tyre_positions
 
 #Get Customer purchased tyre details
 @frappe.whitelist()
@@ -214,3 +219,47 @@ def get_fleet_tyre_details_card(customer):
 	
 	return data
 
+def get_tyres_need_service_nsd_based(customer):
+	linked_vehicles=get_customer_linked_vehicle(customer,"Vehicle Registration Certificate")
+	final_data=[]
+	if linked_vehicles:
+		url = "http://service.lnder.in/api/method/tyre_management_connector.tyre_management_connector.doctype.smart_tyre_realtime_data.smart_tyre_realtime_data.get_smart_tyre_data_bulk"
+		payload = json.dumps({
+		"filters": {
+			"vehicle_no": linked_vehicles,
+			"sort": "DESC"
+		},
+			"odometer_value" : True
+		})
+		headers = {
+			'Authorization': 'token 4567d5a4c58d5ba:50f7dcc70df884f',
+			'Content-Type': 'application/json'
+		}
+		response = requests.request("POST", url, headers=headers, data=payload)
+		if response.ok:
+			response=response.json().get('message')
+			for key,val in response.items():
+				for row in val:
+					if row.get('current_odometer_value'):
+						current_odometer_value = row.get('current_odometer_value')
+					if row.get('tyre_serial_no'):
+						tyre_serial_details=frappe.db.get_value("Tyre Serial No",{"name": row.get('tyre_serial_no')},['odometer_value_at_installation'],as_dict=True)
+						last_periodic_check_kms = frappe.db.get_value("Tyre Maintenance",{"name": row.get('tyre_serial_no'),
+											"maintenance_type":"Periodic Checkup","docstatus":1},
+								'vehicle_odometer_value_at_service')
+						if last_periodic_check_kms:
+							kms_driven_without_checkup=current_odometer_value-last_periodic_check_kms
+						else:
+							kms_driven_without_checkup=current_odometer_value-tyre_serial_details.get('odometer_value_at_installation')
+						if kms_driven_without_checkup and kms_driven_without_checkup >= 10000:
+							final_data.append({
+								'vehicle_no' : key,
+								'tyre_serial_no' : row.get('tyre_serial_no'),
+								'tyre_pressure' : row.get('Pres'),
+								'tyre_temperature' : row.get('Temp'),
+								'kms_travelled_without_checkup' : kms_driven_without_checkup,
+								'total_tyre_mileage' : current_odometer_value-tyre_serial_details.get('odometer_value_at_installation')
+							})
+			return final_data
+		else:
+			return response.raise_for_status()
