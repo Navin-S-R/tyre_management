@@ -133,7 +133,7 @@ def get_customer_linked_vehicle(customer,doctype):
 
 #Get Details for Tyre Cards:
 @frappe.whitelist()
-def get_details_tyre_card(customer):
+def get_fleet_tyre_details_card(customer):
 	data={
 			"avgCost_Km" : 0,
 			"avgMaintainceCost" : 0,
@@ -151,15 +151,14 @@ def get_details_tyre_card(customer):
 	data['no_of_vehicles'] = len(frappe.get_all("Vehicle Registration Certificate",{"customer":customer,"disabled":0},pluck="name"))
  
 	#smart_tyre_list
-	smart_tyre_list = frappe.get_all("Tyre Serial No",{"status":['in',["Delivered","Active","Inactive"]],
+	smart_tyre_list = frappe.get_all("Tyre Serial No",{"status":['in',["Delivered","Active","Inactive",None]],
 																"tyre_status":["not in",["Scarped"]],"customer":customer,
 																"is_smart_tyre":1
 																},
 													pluck="name")
 	data["no_of_smart_tyres"] = len(smart_tyre_list)
-	
 	#regular_tyre_list
-	regular_tyre_list = frappe.get_all("Tyre Serial No",{"status":['in',["Delivered","Active","Inactive"]],
+	regular_tyre_list = frappe.get_all("Tyre Serial No",{"status":['in',["Delivered","Active","Inactive",None]],
 																"tyre_status":["not in",["Scarped"]],"customer":customer,
 																"is_smart_tyre":0
 																},
@@ -167,7 +166,7 @@ def get_details_tyre_card(customer):
 	data["no_of_regular_tyres"] = len(regular_tyre_list)
  
 	#scarped_tyre_list
-	scarped_tyre_list = frappe.get_all("Tyre Serial No",{"status":['in',["Delivered","Active","Inactive"]],
+	scarped_tyre_list = frappe.get_all("Tyre Serial No",{"status":['in',["Delivered","Active","Inactive",None]],
 																"tyre_status":"Scarped","customer":customer,
 																},
 													pluck="name")
@@ -180,13 +179,13 @@ def get_details_tyre_card(customer):
 	maintaince_cost_list = frappe.get_all("Tyre Maintenance",{"serial_no":['in',active_tyres],"maintenance_type":"Preventive Maintenance","docstatus":1},pluck='cost')
 	maintaince_cost = sum(maintaince_cost_list) if maintaince_cost_list else 0
 	data['total_maintenance_cost'] = maintaince_cost
-	data['avgMaintainceCost'] = maintaince_cost/no_of_active_tyres
+	data['avgMaintainceCost'] = maintaince_cost/no_of_active_tyres if no_of_active_tyres else 0
  
 	#Get Break Down Cost Cost
 	breakdown_cost_list = frappe.get_all("Tyre Maintenance",{"serial_no":['in',active_tyres],"maintenance_type":"Breakdown","docstatus":1},pluck='cost')
 	breakdown_cost = sum(breakdown_cost_list) if breakdown_cost_list else 0
 	data['total_breakdown_cost'] = breakdown_cost
-	data['avgBreakdownCost'] = breakdown_cost/no_of_active_tyres
+	data['avgBreakdownCost'] = breakdown_cost/no_of_active_tyres if no_of_active_tyres else 0
  
 	#Get avgCost_Km
 	kms_driven_and_rate_details=frappe.get_all("Tyre Serial No",{"name":['in',active_tyres],"docstatus":1},["kilometer_driven","invoiced_rate"])
