@@ -80,8 +80,8 @@ def update_odometer_value(args):
 				if serial_doc_details and serial_doc_details.get('odometer_value_at_installation'):
 					distance_driven=row.get('end').get('odo_km')-serial_doc_details.get('odometer_value_at_installation')
 					frappe.db.sql("""
-						Update `tabTyre Serial No` SET 
-							current_odometer_value = {0},kilometer_driven={1}
+						Update `tabTyre Serial No` SET
+							current_odometer_value={0},kilometer_driven={1}
 						WHERE name='{2}'
 					""".format(row.get('end').get('odo_km'),distance_driven,serial_no))
 				else:
