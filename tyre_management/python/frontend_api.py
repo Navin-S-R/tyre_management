@@ -50,7 +50,7 @@ def get_customer_purchase_type_details(customer,filter_serial_no=None,filter_is_
 			"scarped_cost":0,
 			"total_cummulative_cost":0,
 			"duration_in_operation" : 0,
-			"kilometer_driven":0,
+			"kilometer_driven":serial_no_doc.kilometer_driven,
 		}
 		data['vehicle_no'] = serial_no_doc.vehicle_no
 		data['operational_date'] = serial_no_doc.installed_datetime
