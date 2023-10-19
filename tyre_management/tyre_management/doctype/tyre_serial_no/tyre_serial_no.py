@@ -72,7 +72,7 @@ def update_odometer_value(args):
 	if isinstance(args, str):
 		args = json.loads(args)
 	for row in args:
-		position_data=get_vehicle_tyre_positions([row.get('plate')])
+		position_data=get_vehicle_tyre_positions([row.get('plate')],get_optimal_values=False)
 		if position_data.get(row.get('plate')):
 			for serial_no in position_data.get(row.get('plate')).values():
 				serial_doc_details = frappe.db.get_value("Tyre Serial No",{"name": serial_no},

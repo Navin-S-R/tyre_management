@@ -235,7 +235,7 @@ class VehicleTirePosition(Document):
 
 #GET Vehicle Tyre Position
 @frappe.whitelist()
-def get_vehicle_tyre_positions(vehicles):
+def get_vehicle_tyre_positions(vehicles,get_optimal_values):
 	final_data={}
 	serial_no_fields = [
 			"front_left_1",
@@ -266,4 +266,15 @@ def get_vehicle_tyre_positions(vehicles):
 			filtered_data = [{key: value for key, value in item.items() if value is not None} for item in data]
 			if filtered_data:
 				final_data[vehicle]=filtered_data[0]
+				if get_optimal_values:
+					final_data[vehicle]["tyre_optimal_values"] = get_optimal_tyre_values(vehicle)
 	return final_data
+
+@frappe.whitelist()
+def get_optimal_tyre_values(vehicle_no):
+	optimal_tyre_values=frappe.get_all("Vehicle Tire Position",{"vehicle_no": vehicle_no},
+									['min_tyre_temperature','max_tyre_temperature',
+									'min_tyre_pressure','max_tyre_pressure'],
+							order_by="modified desc", limit=1)
+	if optimal_tyre_values:
+		return optimal_tyre_values[0]

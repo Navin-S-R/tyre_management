@@ -255,13 +255,13 @@ def get_tyres_need_service_nsd_based(customer):
 						else:
 							kms_driven_without_checkup=current_odometer_value-tyre_serial_details.get('odometer_value_at_installation')
 							nsd_value = 0
-						tyre_position_data=frappe.get_all("Vehicle Tire Position",{"vehicle_no": key},
+						optimal_tyre_values=frappe.get_all("Vehicle Tire Position",{"vehicle_no": key},
 									['min_tyre_temperature','max_tyre_temperature',
 									'min_tyre_pressure','max_tyre_pressure'],
 							order_by="modified desc", limit=1)[0]
 						if ((kms_driven_without_checkup and kms_driven_without_checkup >= 10000) or
-							tyre_position_data.get('min_tyre_temperature')>=row.get('Temp') or tyre_position_data.get('max_tyre_temperature')<=row.get('Temp') or 
-							tyre_position_data.get('min_tyre_pressure')>=row.get('Pres') or tyre_position_data.get('max_tyre_pressure')<=row.get('Pres')):
+							optimal_tyre_values.get('min_tyre_temperature')>=row.get('Temp') or optimal_tyre_values.get('max_tyre_temperature')<=row.get('Temp') or 
+							optimal_tyre_values.get('min_tyre_pressure')>=row.get('Pres') or optimal_tyre_values.get('max_tyre_pressure')<=row.get('Pres')):
 							final_data.append({
 								'vehicle_no' : key,
 								'tyre_serial_no' : row.get('tyre_serial_no'),
