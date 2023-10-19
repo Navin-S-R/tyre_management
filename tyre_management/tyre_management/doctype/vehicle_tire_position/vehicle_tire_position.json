@@ -15,6 +15,12 @@
   "customer",
   "column_break_ipjd0",
   "wheels",
+  "section_break_dct8z",
+  "min_tyre_temperature",
+  "max_tyre_temperature",
+  "column_break_ijogc",
+  "min_tyre_pressure",
+  "max_tyre_pressure",
   "section_break_zuplk",
   "front_left_1",
   "column_break_wrnqj",
@@ -67,7 +73,8 @@
    "fetch_from": "vehicle_no.wheels",
    "fieldname": "wheels",
    "fieldtype": "Int",
-   "label": "Wheels"
+   "label": "Wheels",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_ipjd0",
@@ -246,12 +253,46 @@
    "fieldtype": "Link",
    "label": "Spare 2",
    "options": "Tyre Serial No"
+  },
+  {
+   "fieldname": "section_break_dct8z",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "min_tyre_temperature",
+   "fieldtype": "Float",
+   "label": "Min Tyre Temperature",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ijogc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "min_tyre_pressure",
+   "fieldtype": "Float",
+   "label": "Min Tyre Pressure",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "max_tyre_pressure",
+   "fieldtype": "Float",
+   "label": "Max Tyre Pressure",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "max_tyre_temperature",
+   "fieldtype": "Float",
+   "label": "Max Tyre Temperature"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-18 14:07:42.829888",
+ "modified": "2023-10-19 12:51:00.583173",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Vehicle Tire Position",

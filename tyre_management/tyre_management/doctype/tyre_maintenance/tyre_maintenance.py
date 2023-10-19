@@ -31,13 +31,14 @@ class TyreMaintenance(Document):
 				file_doc.attached_to_name = self.name
 				file_doc.insert(ignore_permissions=True)
 				self.attach_document = file_doc.file_url
+				self.db_set("attach_document", self.attach_document)
+
 	def validate(self):
-		if not self.vehicle_tire_position:
-			tyre_position = frappe.get_value("Vehicle Tire Position",{"ref_doctype":self.ref_doctype,
+		tyre_position = frappe.get_value("Vehicle Tire Position",{"ref_doctype":self.ref_doctype,
 																		"docstatus" : 1,
 																		"vehicle_no":self.vehicle_no},"name")
+		if not self.vehicle_tire_position:
 			self.vehicle_tire_position = tyre_position
-
 		if self.vehicle_tire_position == tyre_position:
 			position_doc = frappe.get_doc("Vehicle Tire Position",{"name":self.vehicle_tire_position})
 			serial_no_fields = [
@@ -74,12 +75,14 @@ class TyreMaintenance(Document):
 					self.vehicle_odometer_value_at_service = row.get('end').get('odo_km')
 		odometer_value_at_installation=frappe.db.get_value("Tyre Serial No",{"name": self.serial_no},'odometer_value_at_installation')
 		self.tyre_milage_at_service = self.vehicle_odometer_value_at_service - odometer_value_at_installation
+		if self.attach_document:
+			self.attach_document_link=frappe.utils.get_url()+self.attach_document
 @frappe.whitelist()
 def get_latest_tyre_position_for_vehicle(doctype, vehicle_no):
 	tyre_position = frappe.get_value("Vehicle Tire Position",{"ref_doctype":doctype,"vehicle_no":vehicle_no},"name")
 	return tyre_position
 
-
+#Get Odometer value
 @frappe.whitelist()
 def get_odometer_value(vehicle_no):
 	url = "http://service.lnder.in/api/method/tyre_management_connector.python.intangles_api.get_intangles_odometer_data"
