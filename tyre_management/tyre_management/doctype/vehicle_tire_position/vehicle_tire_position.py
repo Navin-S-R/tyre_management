@@ -235,7 +235,7 @@ class VehicleTirePosition(Document):
 
 #GET Vehicle Tyre Position
 @frappe.whitelist()
-def get_vehicle_tyre_positions(vehicles,get_optimal_values):
+def get_vehicle_tyre_positions(vehicles,get_optimal_values=None):
 	final_data={}
 	serial_no_fields = [
 			"front_left_1",
