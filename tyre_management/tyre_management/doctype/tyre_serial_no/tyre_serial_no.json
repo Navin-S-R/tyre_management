@@ -102,7 +102,6 @@
    "oldfieldname": "warehouse",
    "oldfieldtype": "Link",
    "options": "Warehouse",
-   "read_only": 1,
    "search_index": 1
   },
   {
@@ -111,8 +110,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Batch No",
-   "options": "Batch",
-   "read_only": 1
+   "options": "Batch"
   },
   {
    "fieldname": "column_break1",
@@ -121,8 +119,7 @@
   {
    "fieldname": "item_name",
    "fieldtype": "Data",
-   "label": "Item Name",
-   "read_only": 1
+   "label": "Item Name"
   },
   {
    "fieldname": "brand",
@@ -130,8 +127,7 @@
    "label": "Brand",
    "oldfieldname": "brand",
    "oldfieldtype": "Link",
-   "options": "Brand",
-   "read_only": 1
+   "options": "Brand"
   },
   {
    "fieldname": "sales_order",
@@ -405,7 +401,7 @@
  ],
  "icon": "fa fa-barcode",
  "links": [],
- "modified": "2023-10-17 17:14:54.782467",
+ "modified": "2023-10-19 18:02:24.699026",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Serial No",

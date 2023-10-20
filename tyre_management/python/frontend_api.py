@@ -257,7 +257,7 @@ def get_tyres_need_service_nsd_based(customer):
 							nsd_value = 0
 						if ((kms_driven_without_checkup and kms_driven_without_checkup >= 10000) or
 							row.get('min_tyre_temperature')>=row.get('Temp') or row.get('max_tyre_temperature')<=row.get('Temp') or 
-							row.get('min_tyre_pressure')>=row.get('Pres') or row.get('max_tyre_pressure')<=row.get('Pres')):
+							row.get('min_tyre_pressure')>=row.get('Pres') or row.get('max_tyre_pressure')<=row.get('Pres')) or nsd_value<=4:
 							final_data.append({
 								'vehicle_no' : key,
 								'tyre_serial_no' : row.get('tyre_serial_no'),
