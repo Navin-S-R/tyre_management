@@ -91,3 +91,4 @@ def update_odometer_value(args):
 							current_odometer_value = {0},kilometer_driven=0
 						WHERE name='{1}'
 					""".format(row.get('end').get('odo_km'),serial_no))
+	frappe.db.commit()
