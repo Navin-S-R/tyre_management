@@ -244,17 +244,17 @@ def get_vehicle_tyre_positions(vehicles, get_optimal_values=None, get_nsd_values
 	]
 
 	for vehicle in vehicles:
-		vehicle_data = []
+		vehicle_data = {}
 		data = frappe.get_all("Vehicle Tire Position", {"vehicle_no": vehicle}, serial_no_fields,
 							order_by="modified desc", limit=1)
 
 		if data:
 			filtered_data = {key: value for key, value in data[0].items() if value is not None}
 			if filtered_data:
-				vehicle_data.append(filtered_data)
+				vehicle_data=filtered_data
 				if get_optimal_values:
 					optimal_values = get_optimal_tyre_values(vehicle)
-					vehicle_data[0]["tyre_optimal_values"] = optimal_values
+					vehicle_data["tyre_optimal_values"] = optimal_values
 				if get_nsd_values:
 					nsd_values = {}
 					for key, value in filtered_data.items():
@@ -263,7 +263,7 @@ def get_vehicle_tyre_positions(vehicles, get_optimal_values=None, get_nsd_values
 														{"serial_no": value, "maintenance_type": "Periodic Checkup", "docstatus": 0},
 														'nsd_value')
 							nsd_values[value] = nsd_value or 0
-					vehicle_data[0]["nsd_values"] = nsd_values
+					vehicle_data["nsd_values"] = nsd_values
 		final_data[vehicle] = vehicle_data
 
 	return final_data
