@@ -193,7 +193,7 @@ def get_fleet_tyre_details_card(customer):
 	data['avgBreakdownCost'] = breakdown_cost/no_of_active_tyres if no_of_active_tyres else 0
  
 	#Get avgCost_Km
-	kms_driven_and_rate_details=frappe.get_all("Tyre Serial No",{"name":['in',active_tyres],"docstatus":1},["kilometer_driven","invoiced_rate"])
+	kms_driven_and_rate_details=frappe.get_all("Tyre Serial No",{"name":['in',active_tyres]},["kilometer_driven","invoiced_rate"])
 	total_kilometer_driven = sum(item['kilometer_driven'] for item in kms_driven_and_rate_details)
 	total_cost = sum(item['invoiced_rate'] for item in kms_driven_and_rate_details)
 	if total_kilometer_driven:
