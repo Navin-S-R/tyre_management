@@ -233,41 +233,39 @@ class VehicleTirePosition(Document):
 					frappe.throw(_(f"{previously_installed_vehicle} have same tyre installed"))
 
 
-#GET Vehicle Tyre Position
 @frappe.whitelist()
-def get_vehicle_tyre_positions(vehicles,get_optimal_values=None):
-	final_data={}
+def get_vehicle_tyre_positions(vehicles, get_optimal_values=None, get_nsd_values=None):
+	final_data = {}
 	serial_no_fields = [
-			"front_left_1",
-			"front_right_1",
-			"middle_left_1",
-			"middle_left_2",
-			"middle_right_1",
-			"middle_right_2",
-			"middle_left_3",
-			"middle_left_4",
-			"middle_right_3",
-			"middle_right_4",
-			"rear_left_1",
-			"rear_left_2",
-			"rear_right_1",
-			"rear_right_2",
-			"rear_left_3",
-			"rear_left_4",
-			"rear_right_3",
-			"rear_right_4",
-			"spare_1",
-			"spare_2"
-		]
+		"front_left_1", "front_right_1", "middle_left_1", "middle_left_2", "middle_right_1", "middle_right_2",
+		"middle_left_3", "middle_left_4", "middle_right_3", "middle_right_4", "rear_left_1", "rear_left_2",
+		"rear_right_1", "rear_right_2", "rear_left_3", "rear_left_4", "rear_right_3", "rear_right_4",
+		"spare_1", "spare_2"
+	]
+
 	for vehicle in vehicles:
-		final_data[vehicle]=[]
-		data=frappe.get_all("Vehicle Tire Position",{"vehicle_no": vehicle},serial_no_fields,order_by="modified desc", limit=1)
+		vehicle_data = []
+		data = frappe.get_all("Vehicle Tire Position", {"vehicle_no": vehicle}, serial_no_fields,
+							order_by="modified desc", limit=1)
+
 		if data:
-			filtered_data = [{key: value for key, value in item.items() if value is not None} for item in data]
+			filtered_data = {key: value for key, value in data[0].items() if value is not None}
 			if filtered_data:
-				final_data[vehicle]=filtered_data[0]
+				vehicle_data.append(filtered_data)
 				if get_optimal_values:
-					final_data[vehicle]["tyre_optimal_values"] = get_optimal_tyre_values(vehicle)
+					optimal_values = get_optimal_tyre_values(vehicle)
+					vehicle_data[0]["tyre_optimal_values"] = optimal_values
+				if get_nsd_values:
+					nsd_values = {}
+					for key, value in filtered_data.items():
+						if isinstance(value, str):
+							nsd_value = frappe.db.get_value("Tyre Maintenance",
+														{"serial_no": value, "maintenance_type": "Periodic Checkup", "docstatus": 0},
+														'nsd_value')
+							nsd_values[value] = nsd_value or 0
+					vehicle_data[0]["nsd_values"] = nsd_values
+		final_data[vehicle] = vehicle_data
+
 	return final_data
 
 @frappe.whitelist()

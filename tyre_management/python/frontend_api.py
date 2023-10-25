@@ -246,12 +246,12 @@ def get_tyres_need_service_nsd_based(customer):
 						current_odometer_value = row.get('current_odometer_value')
 					if row.get('tyre_serial_no'):
 						tyre_serial_details=frappe.db.get_value("Tyre Serial No",{"name": row.get('tyre_serial_no')},['odometer_value_at_installation'],as_dict=True)
-						tyre_maintenance_details = frappe.db.get_value("Tyre Maintenance",{"name": row.get('tyre_serial_no'),
+						tyre_maintenance_details = frappe.db.get_value("Tyre Maintenance",{"serial_no": row.get('tyre_serial_no'),
 											"maintenance_type":"Periodic Checkup","docstatus":1},
 								['vehicle_odometer_value_at_service','nsd_value'],as_dict=True)
 						if tyre_maintenance_details and tyre_maintenance_details.get('vehicle_odometer_value_at_service'):
 							kms_driven_without_checkup=current_odometer_value-tyre_maintenance_details.get('vehicle_odometer_value_at_service')
-							nsd_value = tyre_maintenance_details.get('vehicle_odometer_value_at_service') or 0
+							nsd_value = tyre_maintenance_details.get('nsd_value') or 0
 						else:
 							kms_driven_without_checkup=current_odometer_value-tyre_serial_details.get('odometer_value_at_installation')
 							nsd_value = 0
