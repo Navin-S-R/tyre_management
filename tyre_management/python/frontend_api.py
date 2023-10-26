@@ -50,6 +50,7 @@ def get_customer_purchase_type_details(customer,filter_serial_no=None,filter_is_
 			"scarped_cost":0,
 			"total_cummulative_cost":0,
 			"duration_in_operation" : 0,
+			"nsd_value" : frappe.db.get_value("Tyre Maintenance",{"serial_no": serial_no, "maintenance_type": "Periodic Checkup", "docstatus": 1},'nsd_value'),
 			"kilometer_driven":serial_no_doc.kilometer_driven,
 		}
 		data['vehicle_no'] = serial_no_doc.vehicle_no
