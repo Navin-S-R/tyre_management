@@ -17,6 +17,7 @@
   "vehicle_tire_position",
   "attach_document",
   "attach_document_link",
+  "attach_img_byte",
   "section_break_jdbqc",
   "maintenance_type",
   "serial_no",
@@ -140,12 +141,19 @@
    "hidden": 1,
    "label": "Attach Document Link",
    "read_only": 1
+  },
+  {
+   "fieldname": "attach_img_byte",
+   "fieldtype": "Small Text",
+   "hidden": 1,
+   "label": "Attach Img Byte",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-18 18:17:11.396764",
+ "modified": "2023-10-25 14:05:05.532742",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Maintenance",
