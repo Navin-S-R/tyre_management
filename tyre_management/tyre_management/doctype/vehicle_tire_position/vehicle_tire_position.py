@@ -260,7 +260,7 @@ def get_vehicle_tyre_positions(vehicles, get_optimal_values=None, get_nsd_values
 					for key, value in filtered_data.items():
 						if isinstance(value, str):
 							nsd_value = frappe.db.get_value("Tyre Maintenance",
-														{"serial_no": value, "maintenance_type": "Periodic Checkup", "docstatus": 1},
+														{"serial_no": value, "maintenance_type":['in',["Periodic Checkup","Preventive Maintenance"]], "docstatus": 1},
 														'nsd_value')
 							nsd_values[value] = nsd_value or 0
 					vehicle_data["nsd_values"] = nsd_values
