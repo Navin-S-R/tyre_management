@@ -66,7 +66,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Maintenance Type",
-   "options": "\nPreventive Maintenance\nBreakdown\nPeriodic Checkup",
+   "options": "\nPreventive Maintenance\nBreakdown",
    "reqd": 1
   },
   {
@@ -153,13 +153,14 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-25 14:05:05.532742",
+ "modified": "2023-10-30 13:20:57.646109",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Maintenance",
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
