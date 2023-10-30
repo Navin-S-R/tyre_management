@@ -100,7 +100,7 @@ def get_customer_purchase_type_details(customer,filter_serial_no=None,filter_is_
 		data['breakdown_cost'] = breakdown_cost
 		data['cummulative_breakdown_cost'] = cummulative_breakdown_cost
 
-		preventive_maintenance=frappe.get_all("Tyre Maintenance",{"serial_no":serial_no_doc.name,"maintenance_type":['in',["Periodic Checkup","Preventive Maintenance"]],"docstatus":1},['time_stamp','vehicle_no','customer','vehicle_tire_position','maintenance_type','serial_no','tire_position','cost'])
+		preventive_maintenance=frappe.get_all("Tyre Maintenance",{"serial_no":serial_no_doc.name,"maintenance_type":['in',["Preventive Maintenance"]],"docstatus":1},['time_stamp','vehicle_no','customer','vehicle_tire_position','maintenance_type','serial_no','tire_position','cost'])
 		cost_preventive_maintenance_values = [entry['cost'] for entry in preventive_maintenance]
 		cummulative_preventive_maintenance_cost = sum(cost_preventive_maintenance_values)
 		data['cummulative_preventive_maintenance_cost'] = cummulative_preventive_maintenance_cost
@@ -186,7 +186,7 @@ def get_fleet_tyre_details_card(customer):
 	no_of_active_tyres = len(active_tyres)
 
 	#Get Maintaince Cost
-	maintaince_cost_list = frappe.get_all("Tyre Maintenance",{"serial_no":['in',active_tyres],"maintenance_type":['in',["Preventive Maintenance","Periodic Checkup"]],"docstatus":1},pluck='cost')
+	maintaince_cost_list = frappe.get_all("Tyre Maintenance",{"serial_no":['in',active_tyres],"maintenance_type":['in',["Preventive Maintenance"]],"docstatus":1},pluck='cost')
 	maintaince_cost = sum(maintaince_cost_list) if maintaince_cost_list else 0
 	data['total_maintenance_cost'] = maintaince_cost
 	data['avgMaintainceCost'] = maintaince_cost/no_of_active_tyres if no_of_active_tyres else 0
@@ -252,7 +252,7 @@ def get_tyres_need_service_nsd_based(customer):
 					if row.get('tyre_serial_no'):
 						tyre_serial_details=frappe.db.get_value("Tyre Serial No",{"name": row.get('tyre_serial_no')},['odometer_value_at_installation'],as_dict=True)
 						tyre_maintenance_details = frappe.db.get_value("Tyre Maintenance",{"serial_no": row.get('tyre_serial_no'),
-											"maintenance_type":['in',["Periodic Checkup","Preventive Maintenance"]],"docstatus":1},
+											"maintenance_type":['in',["Preventive Maintenance"]],"docstatus":1},
 								['vehicle_odometer_value_at_service','nsd_value'],as_dict=True)
 						if tyre_maintenance_details and tyre_maintenance_details.get('vehicle_odometer_value_at_service'):
 							kms_driven_without_checkup=current_odometer_value-tyre_maintenance_details.get('vehicle_odometer_value_at_service')
