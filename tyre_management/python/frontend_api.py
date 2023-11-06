@@ -202,9 +202,9 @@ def get_fleet_tyre_details_card(customer):
 	total_kilometer_driven = sum(item['kilometer_driven'] for item in kms_driven_and_rate_details)
 	total_cost = sum(item['invoiced_rate'] for item in kms_driven_and_rate_details)
 	if total_kilometer_driven:
-		data['avgCost_Km'] = (total_cost+maintaince_cost+breakdown_cost)/total_kilometer_driven
+		data['avgCost_Km'] = (maintaince_cost+breakdown_cost)/total_kilometer_driven
 	else:
-		data['avgCost_Km'] = total_cost+maintaince_cost+breakdown_cost
+		data['avgCost_Km'] = maintaince_cost+breakdown_cost
 	
 	#vehicles_with_regular_tyre
 	vehicles_with_regular_tyre = frappe.get_all("Tyre Serial No",{"name":['in',regular_tyre_list],
