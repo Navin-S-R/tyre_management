@@ -286,13 +286,14 @@
   {
    "fieldname": "max_tyre_temperature",
    "fieldtype": "Float",
-   "label": "Max Tyre Temperature"
+   "label": "Max Tyre Temperature",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-19 12:51:00.583173",
+ "modified": "2023-11-07 19:54:14.594772",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Vehicle Tire Position",
