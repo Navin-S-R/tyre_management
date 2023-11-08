@@ -43,3 +43,5 @@ class ScarpTyre(Document):
 			frappe.throw(_(f"Tyre still active in {serial_doc.vehicle_no}"))
 		else:
 			frappe.throw(_(f"Tyre still in company warehouse {serial_doc.warehouse}"))
+		if not self.time_stamp:
+			self.time_stamp = frappe.utils.now()
