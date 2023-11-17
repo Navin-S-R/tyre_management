@@ -1,9 +1,11 @@
 import frappe
 from frappe.desk.query_report import build_xlsx_data
 from frappe.utils.xlsxutils import make_xlsx
+from frappe.sessions import Session, clear_sessions, delete_session
 
 @frappe.whitelist(allow_guest = True)
 def generate_excel_report():
+	frappe.set_user("Administrator")
 	sheet_no = 0
 	report_datas = []
 	
@@ -44,3 +46,4 @@ def generate_excel_report():
 	frappe.response['filename'] = f"Fuel_Billing_report.xlsx"
 	frappe.response['filecontent'] = xlsx_file
 	frappe.response['type'] = 'download'
+	delete_session('Administrator', reason="Session Expired")
