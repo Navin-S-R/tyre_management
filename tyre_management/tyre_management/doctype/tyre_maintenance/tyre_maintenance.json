@@ -27,6 +27,7 @@
   "tire_position",
   "cost",
   "nsd_value",
+  "alert_details",
   "amended_from"
  ],
  "fields": [
@@ -148,12 +149,18 @@
    "hidden": 1,
    "label": "Attach Img Byte",
    "read_only": 1
+  },
+  {
+   "fieldname": "alert_details",
+   "fieldtype": "Data",
+   "label": "Alert Details",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-30 13:20:57.646109",
+ "modified": "2023-11-16 19:56:55.887836",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Maintenance",

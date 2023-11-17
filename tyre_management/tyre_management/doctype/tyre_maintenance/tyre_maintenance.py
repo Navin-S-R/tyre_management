@@ -8,6 +8,7 @@ import base64
 from frappe.model.naming import parse_naming_series
 import json
 import requests
+from tyre_management.python.frontend_api import get_smart_tyre_data_bulk
 
 class TyreMaintenance(Document):
 	def after_insert(self):

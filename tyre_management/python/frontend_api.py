@@ -277,3 +277,31 @@ def get_tyres_need_service_nsd_based(customer):
 			return response.raise_for_status()
 	else:
 		return "No Vehicle Linked"
+
+def get_smart_tyre_data_bulk(Vehicle_list=None,odometer_value=False):
+	url = "http://service.lnder.in/api/method/tyre_management_connector.tyre_management_connector.doctype.smart_tyre_realtime_data.smart_tyre_realtime_data.get_smart_tyre_data_bulk"
+	filters={
+		"sort": "DESC"
+	}
+	if Vehicle_list:
+		filters["vehicle_no"] = Vehicle_list
+	payload = json.dumps({
+		"filters": filters,
+		"odometer_value": False
+	})
+	headers = {
+		'Authorization': 'token 4567d5a4c58d5ba:50f7dcc70df884f',
+		'Content-Type': 'application/json'
+	}
+	response = requests.request("POST", url, headers=headers, data=payload)
+	if response.ok:
+		response=response.json().get('message')
+		return {
+			"res":response,
+			"status":'success'
+		}
+	else:
+		return {
+			"res":response.raise_for_status(),
+			"status": 'failure'
+		}
