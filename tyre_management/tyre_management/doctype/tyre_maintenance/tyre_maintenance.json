@@ -73,7 +73,8 @@
   {
    "fieldname": "tire_position",
    "fieldtype": "Data",
-   "label": "Tire Position"
+   "label": "Tire Position",
+   "no_copy": 1
   },
   {
    "fieldname": "serial_no",
@@ -112,7 +113,8 @@
   {
    "fieldname": "time_stamp",
    "fieldtype": "Datetime",
-   "label": "Time Stamp"
+   "label": "Time Stamp",
+   "no_copy": 1
   },
   {
    "fieldname": "nsd_value",
@@ -129,7 +131,8 @@
   {
    "fieldname": "attach_document",
    "fieldtype": "Attach",
-   "label": "Attach Document"
+   "label": "Attach Document",
+   "no_copy": 1
   },
   {
    "fieldname": "vehicle_odometer_value_at_service",
@@ -141,6 +144,7 @@
    "fieldtype": "Small Text",
    "hidden": 1,
    "label": "Attach Document Link",
+   "no_copy": 1,
    "read_only": 1
   },
   {
@@ -148,19 +152,21 @@
    "fieldtype": "Small Text",
    "hidden": 1,
    "label": "Attach Img Byte",
+   "no_copy": 1,
    "read_only": 1
   },
   {
    "fieldname": "alert_details",
    "fieldtype": "Data",
    "label": "Alert Details",
+   "no_copy": 1,
    "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-16 19:56:55.887836",
+ "modified": "2023-11-22 14:05:48.484723",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Maintenance",

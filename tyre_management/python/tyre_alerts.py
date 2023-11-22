@@ -10,9 +10,9 @@ from frappe.utils import (
 from twilio_integration.twilio_integration.doctype.whatsapp_message.whatsapp_message import WhatsAppMessage
 from urllib.parse import quote
 
-def send_preventive_maintenance_alert():
+def send_preventive_maintenance_completion_alert():
 	vehicle_list=[]
-	time_change_start=datetime.timedelta(hours=12)
+	time_change_start=datetime.timedelta(hours=28)
 	time_change_end=datetime.timedelta(hours=1)
 	start_datetime=(datetime.datetime.now()-time_change_start)
 	end_datetime=(datetime.datetime.now() - time_change_end)
@@ -43,36 +43,89 @@ def send_preventive_maintenance_alert():
 							"parentfield": "alert_type",
 							"parenttype": "Customer"
 						}, pluck="alert_type") or []
-					tyre_msg=f"Dear {vehicle_details.get('customer')},\n\nGreeting from Liquiconnect Team!\n\nFor your vehicle number {key}, the preventive maintenance was done on {today()}, the necessary information is as follows.\n\n"
 					if alert_type:
 						party_details["alert_type"] = alert_type
-						tyre_serial_no_list=[]
-						for row_value in value:
-							tyre_msg += "Tire Serial Number: "+str(row_value.get('tyre_serial_no'))+"\n"
-							tyre_msg += "Tire Pressure: "+str(row_value.get('Pres'))+"\n"
-							tyre_msg += "Tire Temp: "+str(row_value.get('Temp'))+"\n"
-							tyre_msg += "Nsd Value: "+str(row_value.get('nsd_value'))
-							tyre_msg += "\n\n"
-							tyre_serial_no_list.append(str(row_value.get('tyre_serial_no')))
-						tyre_msg += "Thanks,\nLiquiconnect Team."
 						if "WHATSAPP" in party_details["alert_type"] and party_details.get('whatsapp_number'):
-								if party_details.get('whatsapp_number').startswith("+91"):
-										receiver_whatsapp_no = party_details.get('whatsapp_number')
-										receiver_whatsapp_no.replace(" ","")
-								else:
-									receiver_whatsapp_no = "+91"+party_details.get('whatsapp_number')
+							if party_details.get('whatsapp_number').startswith("+91"):
+									receiver_whatsapp_no = party_details.get('whatsapp_number')
 									receiver_whatsapp_no.replace(" ","")
-								ref_doctype_actual="Vehicle Registration Certificate"
-								ref_document_actual=key
-								WhatsAppMessage.send_whatsapp_message(receiver_list=[receiver_whatsapp_no],message=tyre_msg,doctype=ref_doctype_actual,docname=ref_document_actual)
-								if tyre_serial_no_list:
-									serial_no_list="', '".join(tyre_serial_no_list)
-									frappe.db.sql("""
-										UPDATE `tabTyre Maintenance` 
-											SET alert_details = 'Preventive Maintenance'
-												WHERE 
-													maintenance_type='Preventive Maintenance'
-													AND docstatus=1 
-													AND time_stamp BETWEEN '{0}' AND '{1}'
-													AND serial_no IN ('{2}')
-									""".format(start_datetime, end_datetime, serial_no_list))
+							else:
+								receiver_whatsapp_no = "+91"+party_details.get('whatsapp_number')
+								receiver_whatsapp_no.replace(" ","")
+							ref_doctype_actual="Vehicle Registration Certificate"
+							ref_document_actual=key
+
+							tyre_serial_no_list=[]
+							tyre_msg=f"Dear {vehicle_details.get('customer')},\n\nGreeting from Liquiconnect Team!\n\nFor your vehicle number {key}, the preventive maintenance was done on {today()}, the necessary information is as follows.\n\n"
+							count=0
+							nsd_value_details=[]
+							for row_value in value:
+								tyre_msg += "Tire Serial Number: "+str(row_value.get('tyre_serial_no'))+"\n"
+								tyre_msg += "Tire Pressure: "+str(row_value.get('Pres'))+"\n"
+								tyre_msg += "Tire Temp: "+str(row_value.get('Temp'))+"\n"
+								tyre_msg += "Nsd Value: "+str(row_value.get('nsd_value'))
+								tyre_msg += "\n\n"
+								tyre_serial_no_list.append(str(row_value.get('tyre_serial_no')))
+								count+=1
+								if row_value.get('nsd_value') and float(row_value.get('nsd_value')) <= 4:
+									nsd_value_details.append(
+										{
+											"serial_no" : row_value.get('tyre_serial_no'),
+											"nsd_value" : row_value.get('nsd_value')
+										}
+									)
+								if count == 8:
+									count = 0
+									tyre_msg += "Thanks,\nLiquiconnect Team."
+									send_whatsapp_msg(receiver_whatsapp_no=receiver_whatsapp_no,
+										tyre_msg=tyre_msg,
+										ref_doctype_actual=ref_doctype_actual,
+										ref_document_actual=ref_document_actual
+									)
+									tyre_msg=f"Dear {vehicle_details.get('customer')},\n\nGreeting from Liquiconnect Team!\n\nFor your vehicle number {key}, the preventive maintenance was done on {today()}, the necessary information is as follows.\n\n"
+							if count>0:
+								tyre_msg += "Thanks,\nLiquiconnect Team."
+								send_whatsapp_msg(receiver_whatsapp_no=receiver_whatsapp_no,
+										tyre_msg=tyre_msg,
+										ref_doctype_actual=ref_doctype_actual,
+										ref_document_actual=ref_document_actual
+								)
+							tyre_msg=None
+							if nsd_value_details:
+								count=0
+								nsd_value_msg=f"Dear {vehicle_details.get('customer')},\n\nGreeting from Liquiconnect Team!\n\nFor your vehicle number {key}, the below tyre needs to be changed.\n\n"
+								for row in nsd_value_details:
+									nsd_value_msg+= "Tire Serial Number: "+row.get('serial_no')+"\n"
+									nsd_value_msg+= "Nsd Value: "+row.get('nsd_value')
+									nsd_value_msg += "\n\n"
+									if count == 11:
+										count = 0
+										nsd_value_msg += "Thanks,\nLiquiconnect Team."
+										send_whatsapp_msg(receiver_whatsapp_no=receiver_whatsapp_no,
+											tyre_msg=nsd_value_msg,
+											ref_doctype_actual=ref_doctype_actual,
+											ref_document_actual=ref_document_actual
+										)
+										nsd_value_msg=f"Dear {vehicle_details.get('customer')},\n\nGreeting from Liquiconnect Team!\n\nFor your vehicle number {key}, the below tyre needs to be changed.\n\n"
+								if count>0:
+									nsd_value_msg += "Thanks,\nLiquiconnect Team."
+									send_whatsapp_msg(receiver_whatsapp_no=receiver_whatsapp_no,
+											tyre_msg=nsd_value_msg,
+											ref_doctype_actual=ref_doctype_actual,
+											ref_document_actual=ref_document_actual
+									)
+							if tyre_serial_no_list:
+								serial_no_list="', '".join(tyre_serial_no_list)
+								frappe.db.sql("""
+									UPDATE `tabTyre Maintenance`
+										SET alert_details = 'Preventive Maintenance'
+											WHERE
+												maintenance_type='Preventive Maintenance'
+												AND docstatus=1
+												AND time_stamp BETWEEN '{0}' AND '{1}'
+												AND serial_no IN ('{2}')
+								""".format(start_datetime, end_datetime, serial_no_list))
+
+#Send Whatsapp message
+def send_whatsapp_msg(receiver_whatsapp_no,tyre_msg,ref_doctype_actual,ref_document_actual):
+	WhatsAppMessage.send_whatsapp_message(receiver_list=[receiver_whatsapp_no],message=tyre_msg,doctype=ref_doctype_actual,docname=ref_document_actual)
