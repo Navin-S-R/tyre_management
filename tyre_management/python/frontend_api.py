@@ -19,7 +19,7 @@ def get_customer_purchase_type_details(customer,filter_serial_no=None,filter_is_
 		serial_doc_filters['is_smart_tyre'] = filter_is_smart_tyre
 	if filter_vehicle_no:
 		serial_doc_filters['vehicle_no'] = filter_vehicle_no
-	
+
 	#Get Details
 	tyre_details=[]
 	serial_no_list = frappe.get_all("Tyre Serial No",serial_doc_filters,pluck="name")
@@ -155,7 +155,7 @@ def get_fleet_tyre_details_card(customer):
 			"vehicles_with_smart_tyre" : []
 		}
 	data['no_of_vehicles'] = len(frappe.get_all("Vehicle Registration Certificate",{"customer":customer,"disabled":0},pluck="name"))
- 
+
 	#smart_tyre_list
 	smart_tyre_list = frappe.get_all("Tyre Serial No",{"status":['in',["Delivered","Active","Inactive",None]],
 																"tyre_status":["not in",["Scarped"]],"customer":customer,
@@ -170,7 +170,7 @@ def get_fleet_tyre_details_card(customer):
 																},
 													pluck="name")
 	data["no_of_regular_tyres"] = len(regular_tyre_list)
- 
+
 	#scarped_tyre_list
 	scarped_tyre_list = frappe.get_all("Tyre Serial No",{"status":['in',["Delivered","Active","Inactive",None]],
 																"tyre_status":"Scarped","customer":customer,
@@ -190,13 +190,13 @@ def get_fleet_tyre_details_card(customer):
 	maintaince_cost = sum(maintaince_cost_list) if maintaince_cost_list else 0
 	data['total_maintenance_cost'] = maintaince_cost
 	data['avgMaintainceCost'] = maintaince_cost/no_of_active_tyres if no_of_active_tyres else 0
- 
+
 	#Get Break Down Cost Cost
 	breakdown_cost_list = frappe.get_all("Tyre Maintenance",{"serial_no":['in',active_tyres],"maintenance_type":"Breakdown","docstatus":1},pluck='cost')
 	breakdown_cost = sum(breakdown_cost_list) if breakdown_cost_list else 0
 	data['total_breakdown_cost'] = breakdown_cost
 	data['avgBreakdownCost'] = breakdown_cost/no_of_active_tyres if no_of_active_tyres else 0
- 
+
 	#Get avgCost_Km
 	kms_driven_and_rate_details=frappe.get_all("Tyre Serial No",{"name":['in',active_tyres]},["kilometer_driven","invoiced_rate"])
 	total_kilometer_driven = sum(item['kilometer_driven'] for item in kms_driven_and_rate_details)
@@ -205,14 +205,14 @@ def get_fleet_tyre_details_card(customer):
 		data['avgCost_Km'] = (maintaince_cost+breakdown_cost)/total_kilometer_driven
 	else:
 		data['avgCost_Km'] = maintaince_cost+breakdown_cost
-	
+
 	#vehicles_with_regular_tyre
 	vehicles_with_regular_tyre = frappe.get_all("Tyre Serial No",{"name":['in',regular_tyre_list],
 																	"vehicle_no":["not in",None]},
 														pluck="vehicle_no",distinct=True)
 	data['vehicles_with_regular_tyre'] = vehicles_with_regular_tyre
 	data['no_of_vehicles_with_regular_tyre'] = len(vehicles_with_regular_tyre)
-	
+
 	#vehicles_with_smart_tyre
 	vehicles_with_smart_tyre = frappe.get_all("Tyre Serial No",{"name":['in',smart_tyre_list],
 																	"vehicle_no":["not in",None]},
@@ -221,7 +221,7 @@ def get_fleet_tyre_details_card(customer):
 	vehicles_with_only_smart_tyre = [x for x in vehicles_with_smart_tyre if x not in vehicles_with_regular_tyre]
 	data['vehicles_with_smart_tyre'] = vehicles_with_only_smart_tyre
 	data['no_of_vehicles_with_smart_tyre'] = len(vehicles_with_only_smart_tyre)
-	
+
 	return data
 
 #Get Service Required Tyres Based on NSD
@@ -253,15 +253,16 @@ def get_tyres_need_service_nsd_based(customer):
 						tyre_serial_details=frappe.db.get_value("Tyre Serial No",{"name": row.get('tyre_serial_no')},['odometer_value_at_installation'],as_dict=True)
 						tyre_maintenance_details = frappe.db.get_value("Tyre Maintenance",{"serial_no": row.get('tyre_serial_no'),
 											"maintenance_type":['in',["Preventive Maintenance"]],"docstatus":1},
-								['vehicle_odometer_value_at_service','nsd_value'],as_dict=True)
+								['vehicle_odometer_value_at_service','nsd_value','alert_details'],as_dict=True)
 						if tyre_maintenance_details and tyre_maintenance_details.get('vehicle_odometer_value_at_service'):
+							last_alert_sent = tyre_maintenance_details.get('alert_details')
 							kms_driven_without_checkup=current_odometer_value-tyre_maintenance_details.get('vehicle_odometer_value_at_service')
 							nsd_value = tyre_maintenance_details.get('nsd_value') or 0
 						else:
 							kms_driven_without_checkup=current_odometer_value-tyre_serial_details.get('odometer_value_at_installation')
 							nsd_value = 0
 						if ((kms_driven_without_checkup and kms_driven_without_checkup >= 10000) or
-							row.get('min_tyre_temperature')>=row.get('Temp') or row.get('max_tyre_temperature')<=row.get('Temp') or 
+							row.get('min_tyre_temperature')>=row.get('Temp') or row.get('max_tyre_temperature')<=row.get('Temp') or
 							row.get('min_tyre_pressure')>=row.get('Pres') or row.get('max_tyre_pressure')<=row.get('Pres')) or nsd_value<=4:
 							final_data.append({
 								'vehicle_no' : key,
@@ -270,7 +271,8 @@ def get_tyres_need_service_nsd_based(customer):
 								'tyre_temperature' : row.get('Temp'),
 								'nsd_value' : nsd_value,
 								'kms_travelled_without_checkup' : kms_driven_without_checkup,
-								'total_tyre_mileage' : current_odometer_value-tyre_serial_details.get('odometer_value_at_installation')
+								'total_tyre_mileage' : current_odometer_value-tyre_serial_details.get('odometer_value_at_installation'),
+								'last_alert_sent': last_alert_sent
 							})
 			return final_data
 		else:

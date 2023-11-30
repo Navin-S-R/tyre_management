@@ -77,6 +77,9 @@ class TyreMaintenance(Document):
 			self.attach_document_link=frappe.utils.get_url()+self.attach_document
 		if not self.time_stamp:
 			self.time_stamp = frappe.utils.now()
+
+	def onsubmit(self):
+		pass
 @frappe.whitelist()
 def get_latest_tyre_position_for_vehicle(doctype, vehicle_no):
 	tyre_position = frappe.get_value("Vehicle Tire Position",{"ref_doctype":doctype,"vehicle_no":vehicle_no},"name")
