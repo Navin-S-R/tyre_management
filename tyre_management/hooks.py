@@ -108,6 +108,9 @@ scheduler_events = {
 	"cron": {
 		"*/3 * * * *": [
 			"tyre_management.tyre_management.doctype.tyre_serial_no.tyre_serial_no.update_field_from_serial_no"
+		],
+		"4 * * * *": [
+			"tyre_management.python.tyre_alerts.send_preventive_maintenance_completion_alert"
 		]
 	}
 #	"all": [

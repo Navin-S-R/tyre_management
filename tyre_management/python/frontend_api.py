@@ -307,3 +307,25 @@ def get_smart_tyre_data_bulk(Vehicle_list=None,odometer_value=False):
 			"res":response.raise_for_status(),
 			"status": 'failure'
 		}
+
+#get location information for that coordinates using a reverse geocoding API
+@frappe.whitelist()
+def get_location_for_lat_lng(lat, lng):
+	"""
+	The function `get_location_for_lat_lng` takes latitude and longitude coordinates as input and
+	returns the location information for that coordinates using a reverse geocoding API.
+
+	:param lat: The `lat` parameter represents the latitude coordinate of a location
+	:param lng: The `lng` parameter represents the longitude coordinate of a location
+	:return: a JSON response containing location information for the given latitude and longitude
+	coordinates.
+	"""
+	url = f"https://geocode.maps.co/reverse?lat={lat}&lon={lng}"
+	response = requests.request("GET", url, headers={}, data={})
+	if response.ok:
+		response=response.json()
+		response.pop('licence')
+		response.pop('powered_by')
+		response.pop('osm_type')
+		response.pop('osm_id')
+		return response

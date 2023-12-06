@@ -1,0 +1,200 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "Tracking Log-.YY.-.MM.-.DD.-.#####",
+ "creation": "2023-12-05 16:34:26.965328",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "ref_doctype",
+  "column_break_fw5gm",
+  "timestamp",
+  "status",
+  "section_break_lnvrn",
+  "vehicle_no",
+  "column_break_wo2vg",
+  "customer",
+  "section_break_2ta45",
+  "issue_based_on",
+  "expected_time",
+  "alert_details",
+  "location_details",
+  "column_break_drc1o",
+  "time_spent_on",
+  "ref_maintenance_doctype",
+  "ref_maintenance_doc",
+  "reason_for_breakdown",
+  "section_break_nbn7b",
+  "start_time",
+  "cost_involved",
+  "column_break_c0uhl",
+  "end_time",
+  "duration_in_mins",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "ref_doctype",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Ref Doctype",
+   "options": "DocType",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_fw5gm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_lnvrn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_no",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "label": "Vehicle No",
+   "options": "ref_doctype",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_wo2vg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vehicle_no.customer",
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "section_break_2ta45",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "issue_based_on",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Issue Based On",
+   "options": "Preventive Maintenance\nBreakdown\nLayover\nAccident\nFasTag\nFuel",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_drc1o",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:in_list([\"Layover\", \"Breakdown\"],doc.issue_based_on)",
+   "fieldname": "time_spent_on",
+   "fieldtype": "Select",
+   "label": "Time Spent On",
+   "mandatory_depends_on": "eval:in_list([\"Layover\", \"Breakdown\"],doc.issue_based_on)",
+   "options": "Tyre\nEngine\nFood"
+  },
+  {
+   "fieldname": "section_break_nbn7b",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Datetime",
+   "label": "Start Time"
+  },
+  {
+   "fieldname": "cost_involved",
+   "fieldtype": "Currency",
+   "label": "Cost Involved"
+  },
+  {
+   "fieldname": "column_break_c0uhl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Datetime",
+   "label": "End Time"
+  },
+  {
+   "fieldname": "duration_in_mins",
+   "fieldtype": "Float",
+   "label": "Duration in Mins"
+  },
+  {
+   "fieldname": "expected_time",
+   "fieldtype": "Datetime",
+   "label": "Expected Time"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Completed\nWork in Progress\nBreakdown"
+  },
+  {
+   "fieldname": "ref_maintenance_doctype",
+   "fieldtype": "Select",
+   "label": "Ref Maintenance Doctype",
+   "options": "\nTyre Maintenance"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicle Tracking Log",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "ref_maintenance_doc",
+   "fieldtype": "Dynamic Link",
+   "label": "Ref Maintenance Doc",
+   "options": "ref_maintenance_doctype"
+  },
+  {
+   "fieldname": "timestamp",
+   "fieldtype": "Datetime",
+   "label": "Timestamp"
+  },
+  {
+   "fieldname": "reason_for_breakdown",
+   "fieldtype": "Data",
+   "label": "Reason for Breakdown"
+  },
+  {
+   "fieldname": "alert_details",
+   "fieldtype": "Data",
+   "label": "Alert Details"
+  },
+  {
+   "fieldname": "location_details",
+   "fieldtype": "Code",
+   "label": "Location Details"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-12-06 14:01:43.659092",
+ "modified_by": "Administrator",
+ "module": "Tyre Management",
+ "name": "Vehicle Tracking Log",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
