@@ -329,3 +329,75 @@ def get_location_for_lat_lng(lat, lng):
 		response.pop('osm_type')
 		response.pop('osm_id')
 		return response
+
+@frappe.whitelist()
+def get_current_vehicle_location(vehicle_list=None,odometer_value=False):
+	filters={
+		"sort": "DESC"
+	}
+	if vehicle_list:
+		filters['vehicle_no'] = vehicle_list
+
+	url = "http://service.lnder.in/api/method/tyre_management_connector.tyre_management_connector.doctype.vehicle_realtime_data.vehicle_realtime_data.get_intangles_vehicle_data_bulk"
+
+	payload = json.dumps({
+	  "filters": filters
+	})
+	headers = {
+		'Authorization': 'token 4567d5a4c58d5ba:50f7dcc70df884f',
+		'Content-Type': 'application/json',
+	}
+
+	response = requests.request("POST", url, headers=headers, data=payload)
+	if response.ok:
+		response=response.json().get('message')
+		result={}
+		for vehicle in response.keys():
+			if response[vehicle].get('geocode') and response[vehicle].get('geocode').get('lat') and response[vehicle].get('geocode').get('lng'):
+				result[vehicle] = get_location_for_lat_lng(lat=response[vehicle].get('geocode').get('lat'),lng=response[vehicle].get('geocode').get('lng'))
+		return {
+			"status": "success",
+			"res": result
+		}
+	else:
+		return {
+			"res":response.raise_for_status(),
+			"status": 'failure'
+		}
+
+def get_unprocessed_not_moving_vehicles(threshold_minutes=20):
+	url = "http://service.lnder.in/api/method/tyre_management_connector.tyre_management_connector.doctype.vehicle_realtime_data.vehicle_realtime_data.find_stopped_vehicles"
+
+
+	payload = json.dumps({
+		"threshold_minutes":threshold_minutes,
+		"get_location": False
+	})
+	headers = {
+		'Authorization': 'token 4567d5a4c58d5ba:50f7dcc70df884f',
+		'Content-Type': 'application/json'
+	}
+
+	response = requests.request("GET", url, headers=headers, data=payload)
+	if response.ok:
+		response=response.json().get('message')
+		if response:
+			unprocessed_vehicle_list=[]
+			processed_vehicles=frappe.get_all("Vehicle Tracking Log",{'docstatus':0},pluck="name")
+			for row in response:
+				if not row in processed_vehicles:
+					vehicle_details=frappe.db.get_value("Vehicle Registration Certificate",{"name":row.get('vehicle_no')},['customer'],as_dict=True)
+					if vehicle_details:
+						party_details=frappe.db.get_value("Customer",{"name":vehicle_details.get('customer')},['mail_to_receive_alert','whatsapp_number','name'],as_dict=True)
+						row['customer_name'] = vehicle_details.get('customer')
+						row['customer_email'] = party_details.get('mail_to_receive_alert')
+						row['customer_whatsapp']=party_details.get('whatsapp_number')
+						unprocessed_vehicle_list.append(row)
+			return unprocessed_vehicle_list
+	else:
+		return response.raise_for_status()
+
+def post_not_moving_vehicle():
+	response=get_unprocessed_not_moving_vehicles(threshold_minutes=20)
+	if isinstance(response, list):
+		pass

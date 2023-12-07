@@ -28,6 +28,7 @@
   "cost",
   "nsd_value",
   "alert_details",
+  "ref_tracking_log",
   "amended_from"
  ],
  "fields": [
@@ -161,12 +162,18 @@
    "label": "Alert Details",
    "no_copy": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "ref_tracking_log",
+   "fieldtype": "Link",
+   "label": "Ref Tracking Log",
+   "options": "Vehicle Tracking Log"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-22 14:05:48.484723",
+ "modified": "2023-12-07 10:30:46.495285",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Maintenance",

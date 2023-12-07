@@ -7,6 +7,7 @@ from frappe.utils import get_site_path,now
 import base64
 from frappe.model.naming import parse_naming_series
 import json
+from frappe import _
 import requests
 from tyre_management.python.frontend_api import get_smart_tyre_data_bulk
 
@@ -79,7 +80,8 @@ class TyreMaintenance(Document):
 			self.time_stamp = frappe.utils.now()
 
 	def onsubmit(self):
-		pass
+		if not self.ref_tracking_log:
+			frappe.throw(_("Fill the Vehicle Tracking Log"))
 @frappe.whitelist()
 def get_latest_tyre_position_for_vehicle(doctype, vehicle_no):
 	tyre_position = frappe.get_value("Vehicle Tire Position",{"ref_doctype":doctype,"vehicle_no":vehicle_no},"name")

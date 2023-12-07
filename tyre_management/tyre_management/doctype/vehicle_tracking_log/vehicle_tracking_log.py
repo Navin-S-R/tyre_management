@@ -7,7 +7,7 @@ from frappe.model.document import Document
 from datetime import datetime
 import json
 from tyre_management.python.tyre_alerts import send_whatsapp_msg
-from tyre_management.python.frontend_api import get_location_for_lat_lng
+from tyre_management.python.frontend_api import get_location_for_lat_lng,get_current_vehicle_location
 
 class VehicleTrackingLog(Document):
 	def validate(self):
@@ -17,7 +17,7 @@ class VehicleTrackingLog(Document):
 			self.start_time = frappe.utils.now()
 		if self.docstatus == 1:
 			self.status = "Completed"
-		if self.docstatus == 0 and self.issue_based_on=="Breakdown" and not self.alert_details in ['Breakdown','Work in Progress'] and self.status=="Breakdown":
+		if self.docstatus == 0 and self.issue_based_on=="Breakdown" and self.status in ["Breakdown","Work in Progress"]:
 			vehicle_details=frappe.db.get_value(self.ref_doctype,{"name":self.vehicle_no},['customer'],as_dict=True)
 			if vehicle_details:
 				party_details=frappe.db.get_value("Customer",{"name":vehicle_details.get('customer')},['mail_to_receive_alert','whatsapp_number','name'],as_dict=True)
@@ -36,19 +36,29 @@ class VehicleTrackingLog(Document):
 							receiver_whatsapp_no = "+91"+party_details.get('whatsapp_number')
 							receiver_whatsapp_no.replace(" ","")
 						if receiver_whatsapp_no:
-							if self.location_details:
-								if isinstance(self.location_details, str):
-									location_details = json.loads(self.location_details)
-									location=get_location_for_lat_lng(lat=location_details.get('lat'),lng=location_details.get('lng'))
+							if self.status=="Breakdown" and self.alert_details != "Breakdown":
+								if self.location_details:
+									if isinstance(self.location_details, str):
+										location_details = json.loads(self.location_details)
+										location=get_location_for_lat_lng(lat=location_details.get('lat'),lng=location_details.get('lng'))
 
-									if location:
-										location=location.get('display_name')
-									else:
-										location=f"Lat : {location_details.get('lat')} - Lng: {location_details.get('lng')}"
-							else:
-								location="Exact Location Not Found"
-							alert_msg=f"Dear {self.customer},\n\nGreeting from Liquiconnect Team!\n\nyour vehicle number {self.vehicle_no} had a breakdown at {location}.\n\n The reason for the breakdown is {self.reason_for_breakdown}.\n\nThanks,\nLiquiconnect Team."
-							send_whatsapp_msg(receiver_whatsapp_no,alert_msg,self.doctype,self.name)
+										if location:
+											location=location.get('display_name')
+										else:
+											location=f"Lat : {location_details.get('lat')} - Lng: {location_details.get('lng')}"
+								else:
+									location="Exact Location Not Found"
+								alert_msg=f"Dear {self.customer},\n\nGreeting from Liquiconnect Team!\n\nyour vehicle number {self.vehicle_no} had a breakdown at {location}.\n\n The reason for the breakdown is {self.reason_for_breakdown}.\n\nThanks,\nLiquiconnect Team."
+								send_whatsapp_msg(receiver_whatsapp_no,alert_msg,self.doctype,self.name)
+							if self.status=="Work in Progress" and self.alert_details != "Work in Progress":
+								location_result=get_current_vehicle_location([self.vehicle_no])
+								if location_result and location_result.get(self.vehicle_no) and location_result.get(self.vehicle_no).get('display_name'):
+									location=location_result.get(self.vehicle_no).get('display_name')
+								else:
+									location="Exact Location Not Found"
+								alert_msg=f"Dear {self.customer},\n\nGreeting from Liquiconnect Team!\n\nyour vehicle number {self.vehicle_no} had a breakdown and this complaint adhered to {self.workshop} at {location}.\n\nThanks,\nLiquiconnect Team."
+								send_whatsapp_msg(receiver_whatsapp_no,alert_msg,self.doctype,self.name)
+	#On Submit
 	def on_submit(self):
 		if self.issue_based_on in ["Breakdown"]:
 			if not self.ref_maintenance_doc:

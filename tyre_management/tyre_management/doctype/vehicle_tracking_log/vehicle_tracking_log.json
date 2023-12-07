@@ -22,9 +22,8 @@
   "location_details",
   "column_break_drc1o",
   "time_spent_on",
-  "ref_maintenance_doctype",
-  "ref_maintenance_doc",
   "reason_for_breakdown",
+  "workshop",
   "section_break_nbn7b",
   "start_time",
   "cost_involved",
@@ -132,12 +131,6 @@
    "options": "Completed\nWork in Progress\nBreakdown"
   },
   {
-   "fieldname": "ref_maintenance_doctype",
-   "fieldtype": "Select",
-   "label": "Ref Maintenance Doctype",
-   "options": "\nTyre Maintenance"
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -145,12 +138,6 @@
    "options": "Vehicle Tracking Log",
    "print_hide": 1,
    "read_only": 1
-  },
-  {
-   "fieldname": "ref_maintenance_doc",
-   "fieldtype": "Dynamic Link",
-   "label": "Ref Maintenance Doc",
-   "options": "ref_maintenance_doctype"
   },
   {
    "fieldname": "timestamp",
@@ -171,12 +158,17 @@
    "fieldname": "location_details",
    "fieldtype": "Code",
    "label": "Location Details"
+  },
+  {
+   "fieldname": "workshop",
+   "fieldtype": "Data",
+   "label": "Workshop"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-06 14:01:43.659092",
+ "modified": "2023-12-07 12:47:38.678294",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Vehicle Tracking Log",

@@ -183,10 +183,6 @@ def send_alert_for_preventive_maintenance_needed():
 			if response and isinstance(response, list):
 				vehicle_with_10k_kms = [item['vehicle_no'] for item in response if item['kms_travelled_without_checkup'] > 10000 and item['last_alert_sent'] != 'Maintenance Needed']
 
-#Send Breakdown Message
-def send_alert_for_breakdown_maintenance(doc):
-	pass
-
 #Send Whatsapp message
 def send_whatsapp_msg(receiver_whatsapp_no,tyre_msg,ref_doctype_actual,ref_document_actual):
 	WhatsAppMessage.send_whatsapp_message(receiver_list=[receiver_whatsapp_no],message=tyre_msg,doctype=ref_doctype_actual,docname=ref_document_actual)
