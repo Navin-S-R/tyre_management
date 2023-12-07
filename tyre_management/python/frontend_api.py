@@ -365,6 +365,8 @@ def get_current_vehicle_location(vehicle_list=None,odometer_value=False):
 			"status": 'failure'
 		}
 
+#get Unprocessed not moving vehicle
+@frappe.whitelist()
 def get_unprocessed_not_moving_vehicles(threshold_minutes=20):
 	url = "http://service.lnder.in/api/method/tyre_management_connector.tyre_management_connector.doctype.vehicle_realtime_data.vehicle_realtime_data.find_stopped_vehicles"
 
@@ -401,3 +403,12 @@ def post_not_moving_vehicle():
 	response=get_unprocessed_not_moving_vehicles(threshold_minutes=20)
 	if isinstance(response, list):
 		pass
+
+# Get Vehicle Tracking Log in Draft State
+@frappe.whitelist()
+def get_linked_tracking_doc(vehicle):
+	doc_list=frappe.get_all("Vehicle Tracking Log",{
+						'docstatus':0,'vehicle_no': vehicle
+				},["name","status","vehicle_no","customer","issue_based_on",
+					"reason_for_breakdown","time_spent_on","workshop"])
+	return doc_list
