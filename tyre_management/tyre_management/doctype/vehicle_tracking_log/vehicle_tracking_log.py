@@ -60,17 +60,6 @@ class VehicleTrackingLog(Document):
 								send_whatsapp_msg(receiver_whatsapp_no,alert_msg,self.doctype,self.name)
 	#On Submit
 	def on_submit(self):
-		if self.issue_based_on in ["Breakdown"]:
-			if not self.ref_maintenance_doc:
-				frappe.throw(_(f"For {self.issue_based_on} please attach the Maintenance Doc"))
-			if self.ref_maintenance_doc and self.ref_maintenance_doctype:
-				ref_doc_details = frappe.db.get_value(self.ref_maintenance_doctype,
-								{
-									"name":self.ref_maintenance_doc
-								},
-								["cost"],as_dict=True
-							)
-				self.cost_involved = ref_doc_details.get('cost')
 		if not self.end_time:
 			self.end_time = frappe.utils.now()
 		if self.start_time and self.end_time:
