@@ -63,11 +63,20 @@ def send_preventive_maintenance_completion_alert():
 							tyre_msg=f"Dear {vehicle_details.get('customer')},\n\nGreeting from Liquiconnect Team!\n\nFor your vehicle number {key}, the preventive maintenance was done on {today()}, the necessary information is as follows.\n\n"
 							tyre_count=0
 							nsd_value_details=[]
+							tyre_health = ""
 							for row_value in value:
 								tyre_msg += "Tire Serial Number: "+str(row_value.get('tyre_serial_no'))+"\n"
 								tyre_msg += "Tire Pressure: "+str(row_value.get('Pres'))+"\n"
 								tyre_msg += "Tire Temp: "+str(row_value.get('Temp'))+"\n"
-								tyre_msg += "Nsd Value: "+str(row_value.get('nsd_value'))
+								if row_value.get('nsd_value') >= 20:
+									tyre_health = "High"
+								elif row_value.get('nsd_value') < 20 and row_value.get('nsd_value') >= 10:
+									tyre_health = "Medium"
+								elif row_value.get('nsd_value') < 10 and row_value.get('nsd_value') >= 5:
+									tyre_health = "Low"
+								elif row_value.get('nsd_value') <= 4:
+									tyre_health = "Needs change"
+								tyre_msg += "Tyre health: "+ tyre_health
 								tyre_msg += "\n\n"
 								tyre_serial_no_list.append(str(row_value.get('tyre_serial_no')))
 								tyre_count+=1
