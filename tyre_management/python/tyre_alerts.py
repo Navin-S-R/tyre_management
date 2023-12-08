@@ -182,15 +182,45 @@ def send_preventive_maintenance_completion_alert():
 #send_alert_for_preventive_maintenance need for these vehicles
 def send_alert_for_preventive_maintenance_needed():
 	"""
-	The function sends an alert for preventive maintenance needed for vehicles that have traveled more
-	than 10,000 kms without a checkup.
+		The function sends an alert for preventive maintenance needed for vehicles that have traveled more
+		than 10,000 kms without a checkup.
 	"""
 	customer_list=frappe.get_all("Vehicle Tire Position", pluck="customer", distinct=True)
 	if customer_list:
 		for customer in customer_list:
 			response=get_tyres_need_service_nsd_based(customer)
 			if response and isinstance(response, list):
-				vehicle_with_10k_kms = [item['vehicle_no'] for item in response if item['kms_travelled_without_checkup'] > 10000 and item['last_alert_sent'] != 'Maintenance Needed']
+				vehicle_with_10k_kms = list(set([item['vehicle_no'] for item in response if item['kms_travelled_without_checkup'] > 10000 and item['last_alert_sent'] != 'Maintenance Needed']))
+				if vehicle_with_10k_kms:
+					for vehicle in vehicle_with_10k_kms:
+						for row in response:
+							if row['vehicle_no'] == vehicle:
+								party_details=frappe.db.get_value("Customer",{"name":row.get('customer')},['mail_to_receive_alert','whatsapp_number','name'],as_dict=True)
+								alert_type = frappe.get_all("Alert Type Multselect", {
+										"parent": row.get('customer'),
+										"parentfield": "alert_type",
+										"parenttype": "Customer"
+									}, pluck="alert_type") or []
+								if alert_type:
+									party_details["alert_type"] = alert_type
+									if "WHATSAPP" in party_details["alert_type"] and party_details.get('whatsapp_number'):
+										if party_details.get('whatsapp_number').startswith("+91"):
+												receiver_whatsapp_no = party_details.get('whatsapp_number')
+												receiver_whatsapp_no.replace(" ","")
+										else:
+											receiver_whatsapp_no = "+91"+party_details.get('whatsapp_number')
+											receiver_whatsapp_no.replace(" ","")
+										last_preventive_maintenance_date=None
+										if row.get('last_preventive_maintenance_date') and isinstance(row.get('last_preventive_maintenance_date'), datetime.datetime):
+											last_preventive_maintenance_date = row.get('last_preventive_maintenance_date').strftime("%Y-%m-%d")
+										tyre_msg=f"Dear {row.get('customer')},\n\nGreeting from Liquiconnect Team!\n\n"
+										tyre_msg += f"Last maintenance date : {last_preventive_maintenance_date}\n\n"
+										tyre_msg += f"Odometer reading last PM: {row.get('vehicle_odometer_value_at_service')}\n\n"
+										tyre_msg += f"Odometer present reading: {row.get('kms_travelled_without_checkup')}\n\n"
+										tyre_msg += f"Km travelled in duration: {row.get('current_odometer_value')}\n\n"
+										tyre_msg += "Thanks,\nLiquiconnect Team."
+										WhatsAppMessage.send_whatsapp_message(receiver_list=[receiver_whatsapp_no],message=tyre_msg,doctype="Customer",docname=row.get('customer'))
+										break
 
 #Send Whatsapp message
 def send_whatsapp_msg(receiver_whatsapp_no,tyre_msg,ref_doctype_actual,ref_document_actual):

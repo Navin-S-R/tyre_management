@@ -253,10 +253,10 @@ def get_tyres_need_service_nsd_based(customer):
 						tyre_serial_details=frappe.db.get_value("Tyre Serial No",{"name": row.get('tyre_serial_no')},['odometer_value_at_installation'],as_dict=True)
 						tyre_maintenance_details = frappe.db.get_value("Tyre Maintenance",{"serial_no": row.get('tyre_serial_no'),
 											"maintenance_type":['in',["Preventive Maintenance"]],"docstatus":1},
-								['vehicle_odometer_value_at_service','nsd_value','alert_details'],as_dict=True)
+								['vehicle_odometer_value_at_service','nsd_value','alert_details','time_stamp','customer'],as_dict=True)
 						if tyre_maintenance_details and tyre_maintenance_details.get('vehicle_odometer_value_at_service'):
 							last_alert_sent = tyre_maintenance_details.get('alert_details')
-							kms_driven_without_checkup=current_odometer_value-tyre_maintenance_details.get('vehicle_odometer_value_at_service')
+							kms_driven_without_checkup=current_odometer_value-tyre_maintenance_details.get('vehicle_odometer_value_at_service') or 0
 							nsd_value = tyre_maintenance_details.get('nsd_value') or 0
 						else:
 							kms_driven_without_checkup=current_odometer_value-tyre_serial_details.get('odometer_value_at_installation')
@@ -266,12 +266,16 @@ def get_tyres_need_service_nsd_based(customer):
 							row.get('min_tyre_pressure')>=row.get('Pres') or row.get('max_tyre_pressure')<=row.get('Pres')) or nsd_value<=4:
 							final_data.append({
 								'vehicle_no' : key,
+								'customer' : tyre_maintenance_details.get('customer'),
 								'tyre_serial_no' : row.get('tyre_serial_no'),
 								'tyre_pressure' : row.get('Pres'),
 								'tyre_temperature' : row.get('Temp'),
 								'nsd_value' : nsd_value,
 								'kms_travelled_without_checkup' : kms_driven_without_checkup,
-								'total_tyre_mileage' : current_odometer_value-tyre_serial_details.get('odometer_value_at_installation'),
+								'current_odometer_value' : current_odometer_value or 0,
+								'total_tyre_mileage' : current_odometer_value-tyre_serial_details.get('odometer_value_at_installation') or 0,
+								'last_preventive_maintenance_date' : tyre_maintenance_details.get('time_stamp'),
+								'vehicle_odometer_value_at_service' : tyre_maintenance_details.get('vehicle_odometer_value_at_service') or 0,
 								'last_alert_sent': last_alert_sent
 							})
 			return final_data

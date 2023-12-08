@@ -113,13 +113,13 @@ scheduler_events = {
 		"*/4 * * * *": [
 			"tyre_management.python.tyre_alerts.send_preventive_maintenance_completion_alert"
 		]
-	}
+	},
 #	"all": [
 #		"tyre_management.tasks.all"
 #	],
-#	"daily": [
-#		"tyre_management.tasks.daily"
-#	],
+	"daily": [
+		"tyre_management.python.tyre_alerts.send_alert_for_preventive_maintenance_needed"
+	]
 #	"hourly": [
 #		"tyre_management.tasks.hourly"
 #	],

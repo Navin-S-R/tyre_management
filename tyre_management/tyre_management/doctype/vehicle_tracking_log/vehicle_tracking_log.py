@@ -52,6 +52,7 @@ class VehicleTrackingLog(Document):
 									location="Exact Location Not Found"
 								alert_msg=f"Dear {self.customer},\n\nGreeting from Liquiconnect Team!\n\nyour vehicle number {self.vehicle_no} had a breakdown at {location}.\n\n The reason for the breakdown is {self.reason_for_breakdown}.\n\nThanks,\nLiquiconnect Team."
 								send_whatsapp_msg(receiver_whatsapp_no,alert_msg,self.ref_doctype,self.vehicle_no)
+								self.alert_details='Breakdown'
 							if self.status=="Work in Progress" and self.alert_details != "Work in Progress" and self.time_spent_on in ['Tyre','Engine']:
 								location_result=get_current_vehicle_location([self.vehicle_no])
 								if (location_result and
@@ -65,6 +66,7 @@ class VehicleTrackingLog(Document):
 									location="Exact Location Not Found"
 								alert_msg=f"Dear {self.customer},\n\nGreeting from Liquiconnect Team!\n\nyour vehicle number {self.vehicle_no} had a breakdown and this complaint adhered to {self.workshop} at {location}.\n\nThanks,\nLiquiconnect Team."
 								send_whatsapp_msg(receiver_whatsapp_no,alert_msg,self.doctype,self.name)
+								self.alert_details='Work in Progress'
 
 						if self.location_details:
 							if isinstance(self.location_details, dict):
