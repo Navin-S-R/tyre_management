@@ -168,7 +168,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-07 12:47:38.678294",
+ "modified": "2023-12-08 12:29:00.809083",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Vehicle Tracking Log",
@@ -184,6 +184,7 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],

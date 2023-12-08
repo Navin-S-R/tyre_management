@@ -36,28 +36,39 @@ class VehicleTrackingLog(Document):
 							receiver_whatsapp_no = "+91"+party_details.get('whatsapp_number')
 							receiver_whatsapp_no.replace(" ","")
 						if receiver_whatsapp_no:
-							if self.status=="Breakdown" and self.alert_details != "Breakdown":
+							if self.status=="Breakdown" and self.alert_details != "Breakdown" and self.time_spent_on in ['Tyre','Engine']:
 								if self.location_details:
 									if isinstance(self.location_details, str):
 										location_details = json.loads(self.location_details)
-										location=get_location_for_lat_lng(lat=location_details.get('lat'),lng=location_details.get('lng'))
+									else:
+										location_details = self.location_details
 
-										if location:
-											location=location.get('display_name')
-										else:
-											location=f"Lat : {location_details.get('lat')} - Lng: {location_details.get('lng')}"
+									location=get_location_for_lat_lng(lat=location_details.get('lat'),lng=location_details.get('lng'))
+									if location:
+										location=location.get('display_name')
+									else:
+										location=f"Lat : {location_details.get('lat')} - Lng: {location_details.get('lng')}"
 								else:
 									location="Exact Location Not Found"
 								alert_msg=f"Dear {self.customer},\n\nGreeting from Liquiconnect Team!\n\nyour vehicle number {self.vehicle_no} had a breakdown at {location}.\n\n The reason for the breakdown is {self.reason_for_breakdown}.\n\nThanks,\nLiquiconnect Team."
-								send_whatsapp_msg(receiver_whatsapp_no,alert_msg,self.doctype,self.name)
-							if self.status=="Work in Progress" and self.alert_details != "Work in Progress":
+								send_whatsapp_msg(receiver_whatsapp_no,alert_msg,self.ref_doctype,self.vehicle_no)
+							if self.status=="Work in Progress" and self.alert_details != "Work in Progress" and self.time_spent_on in ['Tyre','Engine']:
 								location_result=get_current_vehicle_location([self.vehicle_no])
-								if location_result and location_result.get(self.vehicle_no) and location_result.get(self.vehicle_no).get('display_name'):
-									location=location_result.get(self.vehicle_no).get('display_name')
+								if (location_result and
+										location_result.get('status') == 'success' and
+										location_result.get('res') and
+										location_result.get('res').get(self.vehicle_no) and
+										location_result.get('res').get(self.vehicle_no).get('display_name')):
+
+									location=location_result.get('res').get(self.vehicle_no).get('display_name')
 								else:
 									location="Exact Location Not Found"
 								alert_msg=f"Dear {self.customer},\n\nGreeting from Liquiconnect Team!\n\nyour vehicle number {self.vehicle_no} had a breakdown and this complaint adhered to {self.workshop} at {location}.\n\nThanks,\nLiquiconnect Team."
 								send_whatsapp_msg(receiver_whatsapp_no,alert_msg,self.doctype,self.name)
+
+						if self.location_details:
+							if isinstance(self.location_details, dict):
+								self.location_details = json.dumps(self.location_details)
 	#On Submit
 	def on_submit(self):
 		if not self.end_time:
