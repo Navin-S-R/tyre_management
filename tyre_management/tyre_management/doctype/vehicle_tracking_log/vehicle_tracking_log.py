@@ -42,6 +42,8 @@ class VehicleTrackingLog(Document):
 								if self.location_details:
 									if isinstance(self.location_details, str):
 										location_details = json.loads(self.location_details)
+										if isinstance(self.location_details, str):
+											self.location_details = json.dumps(self.location_details)
 									else:
 										location_details = self.location_details
 
@@ -73,6 +75,7 @@ class VehicleTrackingLog(Document):
 						if self.location_details:
 							if isinstance(self.location_details, dict):
 								self.location_details = json.dumps(self.location_details)
+
 
 		#['Layover','FasTag','Accident','Fuel'] Direct submission
 		if self.issue_based_on in ['Layover','FasTag','Accident','Fuel']:
@@ -134,7 +137,7 @@ def send_whatsapp_msg_to_driver(threshold_minutes=20):
 					receiver_whatsapp_no = "+91"+row.get('driver_mobile')
 					receiver_whatsapp_no.replace(" ","")
 				msg = f"Dear {row.get('driver_name')},\n\nGreeting from Liquiconnect Team!\n\nYour vehicle {row.get('vehicle_no')} is standing in the same place for about {threshold_minutes},\n\nPlease report the issue on the below link.\n\n"
-				msg+=f"{frappe.utils.get_url()}/vehicle-tracking-log?new=1&&vehicle_no={row.get('vehicle_no')}"
+				msg+=f"{frappe.utils.get_url()}/vehicle-tracking-log?new=1&&vehicle_no={row.get('vehicle_no')}&&location_details={row.get('geo_location')}"
 				msg+="\n\nThanks,\nLiquiconnect Team."
 				WhatsAppMessage.send_whatsapp_message(receiver_list=[receiver_whatsapp_no],message=msg,doctype="Vehicle Registration Certificate",docname=row.get('vehicle_no'))
 
@@ -150,7 +153,30 @@ def send_whatsapp_msg_to_process():
 				receiver_whatsapp_no = "+91"+driver_details.get('mobile_no')
 				receiver_whatsapp_no.replace(" ","")
 			msg = f"Dear {driver_details.get('full_name')},\n\nGreeting from Liquiconnect Team!\n\nPlease update your vehicle's ({need_to_process_list.get('vehicle_no')}) previous log.\n\n"
-			msg+=f"{frappe.utils.get_url()}/vehicle-tracking-log?name={need_to_process_list.get('name')}"
+			msg+=f"{frappe.utils.get_url()}/vehicle-tracking-log?name={need_to_process_list.get('name')}&&status=Work in Progress"
 			msg+="\n\nThanks,\nLiquiconnect Team."
 			WhatsAppMessage.send_whatsapp_message(receiver_list=[receiver_whatsapp_no],message=msg,doctype="Vehicle Tracking Log",docname=need_to_process_list.get('name'))
 			frappe.db.set_value("Vehicle Tracking Log", need_to_process_list.get('name'), "driver_alert", "Work in Progress")
+
+def send_whatsapp_msg_to_complete():
+	need_to_process_list=frappe.get_all("Vehicle Tracking Log",{"docstatus":0,"status":['in',['Work in Progress']],'driver_alert':['in',['Work in Progress']]},['name','vehicle_no','issue_based_on'])
+	if need_to_process_list:
+		driver_details=frappe.db.get_value("User",{'driving_vehicle_no':need_to_process_list.get('vehicle_no'),"enabled":1},['email','mobile_no','username','full_name'],as_dict=True)
+		if driver_details.get('mobile_no'):
+			if driver_details.get('mobile_no').startswith("+91"):
+						receiver_whatsapp_no = driver_details.get('mobile_no')
+						receiver_whatsapp_no.replace(" ","")
+			else:
+				receiver_whatsapp_no = "+91"+driver_details.get('mobile_no')
+				receiver_whatsapp_no.replace(" ","")
+			screen=None
+			if need_to_process_list.get("issue_based_on") == "Breakdown":
+				screen="breakdown"
+			if need_to_process_list.get("issue_based_on") == "Preventive Maintenance":
+				screen="preventive"
+				if screen:
+					msg = f"Dear {driver_details.get('full_name')},\n\nGreeting from Liquiconnect Team!\n\nPlease update your vehicle's ({need_to_process_list.get('vehicle_no')}) service report.\n\n"
+					msg+=f"https://lnder-dev-client.el.r.appspot.com/#/submitreport/{screen}/{need_to_process_list.get('vehicle_no')}"
+					msg+="\n\nThanks,\nLiquiconnect Team."
+					WhatsAppMessage.send_whatsapp_message(receiver_list=[receiver_whatsapp_no],message=msg,doctype="Vehicle Tracking Log",docname=need_to_process_list.get('name'))
+					frappe.db.set_value("Vehicle Tracking Log", need_to_process_list.get('name'), "driver_alert", "Complete")

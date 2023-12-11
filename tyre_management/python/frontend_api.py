@@ -398,6 +398,8 @@ def get_unprocessed_not_moving_vehicles(threshold_minutes=20):
 					if vehicle_details:
 						party_details=frappe.db.get_value("Customer",{"name":vehicle_details.get('customer')},['mail_to_receive_alert','whatsapp_number','name'],as_dict=True)
 						driver_details=frappe.db.get_value("User",{'driving_vehicle_no':row.get('vehicle_no'),"enabled":1},['email','mobile_no','username','full_name'],as_dict=True)
+						if row.get('geo_location'):
+							row['geo_location'] = json.dumps(row.get('geo_location')).replace("'",'"')
 						row['customer_name'] = vehicle_details.get('customer')
 						row['customer_email'] = party_details.get('mail_to_receive_alert')
 						row['customer_whatsapp']=party_details.get('whatsapp_number')
