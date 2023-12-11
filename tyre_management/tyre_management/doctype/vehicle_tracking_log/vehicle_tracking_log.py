@@ -139,10 +139,9 @@ def send_whatsapp_msg_to_driver(threshold_minutes=20):
 					receiver_whatsapp_no.replace(" ","")
 				msg = f"Dear {row.get('driver_name')},\n\nGreeting from Liquiconnect Team!\n\nYour vehicle {row.get('vehicle_no')} is standing in the same place for about {threshold_minutes} minutes,\n\nPlease report the issue on the below link.\n\n"
 				msg+=f"{frappe.utils.get_url()}/vehicle-tracking-log?new=1&&vehicle_no={row.get('vehicle_no')}"
-				if row.get('geo_location'):
+				if row.get('geo_location_str'):
 					msg+=f"&&location_details={quote(row.get('geo_location'))}"
 				msg+="\n\nThanks,\nLiquiconnect Team."
-				print(msg)
 				WhatsAppMessage.send_whatsapp_message(receiver_list=[receiver_whatsapp_no],message=msg,doctype="Vehicle Registration Certificate",docname=row.get('vehicle_no'))
 
 def send_whatsapp_msg_to_process():
