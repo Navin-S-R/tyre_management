@@ -1,5 +1,5 @@
 import frappe
-from datetime import datetime
+from datetime import datetime,timedelta
 import requests
 import json
 
@@ -389,24 +389,25 @@ def get_unprocessed_not_moving_vehicles(threshold_minutes=20):
 		response=response.json().get('message')
 		if response:
 			unprocessed_vehicle_list=[]
-			processed_vehicles=frappe.get_all("Vehicle Tracking Log",{'docstatus':0},pluck="name")
+			time_change=timedelta(minutes=40)
+			end_datetime=(datetime.now()-time_change)
+			processed_vehicles=frappe.get_all("Vehicle Tracking Log",{'docstatus':0,"end_time":[">=",end_datetime]},pluck="name")
 			for row in response:
 				if not row in processed_vehicles:
 					vehicle_details=frappe.db.get_value("Vehicle Registration Certificate",{"name":row.get('vehicle_no')},['customer'],as_dict=True)
 					if vehicle_details:
 						party_details=frappe.db.get_value("Customer",{"name":vehicle_details.get('customer')},['mail_to_receive_alert','whatsapp_number','name'],as_dict=True)
+						driver_details=frappe.db.get_value("User",{'driving_vehicle_no':row.get('vehicle_no'),"enabled":1},['email','mobile_no','username','full_name'],as_dict=True)
 						row['customer_name'] = vehicle_details.get('customer')
 						row['customer_email'] = party_details.get('mail_to_receive_alert')
 						row['customer_whatsapp']=party_details.get('whatsapp_number')
+						row['driver_email']=driver_details.get('email') or None
+						row['driver_mobile']=driver_details.get('mobile_no') or None
+						row['driver_name']=driver_details.get('full_name') or None
 						unprocessed_vehicle_list.append(row)
 			return unprocessed_vehicle_list
 	else:
 		return response.raise_for_status()
-
-def post_not_moving_vehicle():
-	response=get_unprocessed_not_moving_vehicles(threshold_minutes=20)
-	if isinstance(response, list):
-		pass
 
 # Get Vehicle Tracking Log in Draft State
 @frappe.whitelist()

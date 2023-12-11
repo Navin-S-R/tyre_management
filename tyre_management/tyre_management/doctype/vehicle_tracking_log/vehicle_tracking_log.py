@@ -7,10 +7,14 @@ from frappe.model.document import Document
 from datetime import datetime
 import json
 from tyre_management.python.tyre_alerts import send_whatsapp_msg
-from tyre_management.python.frontend_api import get_location_for_lat_lng,get_current_vehicle_location
+from tyre_management.python.frontend_api import get_location_for_lat_lng,get_current_vehicle_location,get_unprocessed_not_moving_vehicles
+from twilio_integration.twilio_integration.doctype.whatsapp_message.whatsapp_message import WhatsAppMessage
 
 class VehicleTrackingLog(Document):
 	def validate(self):
+		previous_doc=frappe.db.get_value("Vehicle Tracking Log",{"vehicle_no":self.vehicle_no,"docstatus":0,"name":["not in",[self.name]]},"name")
+		if previous_doc:
+			frappe.throw(_(f"Previous Log is not yet closed, <a href='{frappe.utils.get_url()}/vehicle-tracking-log?name={previous_doc}'>{ _('Update the previous progress')}</a>"))
 		if not self.timestamp:
 			self.timestamp = frappe.utils.now()
 		if not self.start_time:
@@ -103,3 +107,37 @@ class VehicleTrackingLog(Document):
 						if receiver_whatsapp_no:
 							alert_msg=f"Dear {self.customer},\n\nGreeting from Liquiconnect Team!\n\nyour vehicle number {self.vehicle_no} had a breakdown and it was resolved.\n\nThe cost involved to resolve : {self.cost_involved}\n\nThanks,\nLiquiconnect Team."
 							send_whatsapp_msg(receiver_whatsapp_no,alert_msg,self.doctype,self.name)
+
+# Send Initial Request MSG
+def send_whatsapp_msg_to_driver(threshold_minutes=20):
+	response=get_unprocessed_not_moving_vehicles(threshold_minutes)
+	if isinstance(response, list):
+		for row in response:
+			if row.get('driver_mobile'):
+				if row.get('driver_mobile').startswith("+91"):
+						receiver_whatsapp_no = row.get('driver_mobile')
+						receiver_whatsapp_no.replace(" ","")
+				else:
+					receiver_whatsapp_no = "+91"+row.get('driver_mobile')
+					receiver_whatsapp_no.replace(" ","")
+				msg = f"Dear {row.get('driver_name')},\n\nGreeting from Liquiconnect Team!\n\nYour vehicle {row.get('vehicle_no')} is standing in the same place for about {threshold_minutes},\n\nPlease report the issue on the below link.\n\n"
+				msg+=f"{frappe.utils.get_url()}/vehicle-tracking-log?new=1&&vehicle_no={row.get('vehicle_no')}"
+				msg+="\n\nThanks,\nLiquiconnect Team."
+				WhatsAppMessage.send_whatsapp_message(receiver_list=[receiver_whatsapp_no],message=msg,doctype="Vehicle Registration Certificate",docname=row.get('vehicle_no'))
+
+def send_whatsapp_msg_to_process():
+	need_to_process_list=frappe.get_all("Vehicle Tracking Log",{"docstatus":0,"status":['in',['Breakdown']],'driver_alert':['in',None]},['name','vehicle_no'])
+	if need_to_process_list:
+		driver_details=frappe.db.get_value("User",{'driving_vehicle_no':need_to_process_list.get('vehicle_no'),"enabled":1},['email','mobile_no','username','full_name'],as_dict=True)
+		if driver_details.get('mobile_no'):
+			if driver_details.get('mobile_no').startswith("+91"):
+						receiver_whatsapp_no = driver_details.get('mobile_no')
+						receiver_whatsapp_no.replace(" ","")
+			else:
+				receiver_whatsapp_no = "+91"+driver_details.get('mobile_no')
+				receiver_whatsapp_no.replace(" ","")
+			msg = f"Dear {driver_details.get('full_name')},\n\nGreeting from Liquiconnect Team!\n\nPlease update your vehicle's ({need_to_process_list.get('vehicle_no')}) previous log.\n\n"
+			msg+=f"{frappe.utils.get_url()}/vehicle-tracking-log?name={need_to_process_list.get('name')}"
+			msg+="\n\nThanks,\nLiquiconnect Team."
+			WhatsAppMessage.send_whatsapp_message(receiver_list=[receiver_whatsapp_no],message=msg,doctype="Vehicle Tracking Log",docname=need_to_process_list.get('name'))
+			frappe.db.set_value("Vehicle Tracking Log", need_to_process_list.get('name'), "driver_alert", "Work in Progress")
