@@ -19,8 +19,6 @@ class VehicleTrackingLog(Document):
 			self.timestamp = frappe.utils.now()
 		if not self.start_time:
 			self.start_time = frappe.utils.now()
-		if self.docstatus == 1:
-			self.status = "Completed"
 		if self.docstatus == 0 and self.issue_based_on=="Breakdown" and self.status in ["Breakdown","Work in Progress"]:
 			vehicle_details=frappe.db.get_value(self.ref_doctype,{"name":self.vehicle_no},['customer'],as_dict=True)
 			if vehicle_details:
@@ -75,8 +73,23 @@ class VehicleTrackingLog(Document):
 						if self.location_details:
 							if isinstance(self.location_details, dict):
 								self.location_details = json.dumps(self.location_details)
+
+		#['Layover','FasTag','Accident','Fuel'] Direct submission
+		if self.issue_based_on in ['Layover','FasTag','Accident','Fuel']:
+			if not self.end_time:
+				self.end_time = frappe.utils.now()
+			self.docstatus=1
+			self.status = "Completed"
+			if self.start_time and self.end_time:
+				if isinstance(self.start_time, str):
+					self.start_time = datetime.strptime(self.start_time, "%Y-%m-%d %H:%M:%S.%f")
+				if isinstance(self.end_time, str):
+					self.end_time = datetime.strptime(self.end_time, "%Y-%m-%d %H:%M:%S.%f")
+				self.duration_in_mins = (self.end_time - self.start_time).total_seconds() / 60
+
 	#On Submit
 	def on_submit(self):
+		self.status = "Completed"
 		if not self.end_time:
 			self.end_time = frappe.utils.now()
 		if self.start_time and self.end_time:
