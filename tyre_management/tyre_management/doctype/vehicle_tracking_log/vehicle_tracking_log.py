@@ -136,7 +136,7 @@ def send_whatsapp_msg_to_driver(threshold_minutes=20):
 				else:
 					receiver_whatsapp_no = "+91"+row.get('driver_mobile')
 					receiver_whatsapp_no.replace(" ","")
-				msg = f"Dear {row.get('driver_name')},\n\nGreeting from Liquiconnect Team!\n\nYour vehicle {row.get('vehicle_no')} is standing in the same place for about {threshold_minutes},\n\nPlease report the issue on the below link.\n\n"
+				msg = f"Dear {row.get('driver_name')},\n\nGreeting from Liquiconnect Team!\n\nYour vehicle {row.get('vehicle_no')} is standing in the same place for about {threshold_minutes} minutes,\n\nPlease report the issue on the below link.\n\n"
 				msg+=f"{frappe.utils.get_url()}/vehicle-tracking-log?new=1&&vehicle_no={row.get('vehicle_no')}&&location_details={row.get('geo_location')}"
 				msg+="\n\nThanks,\nLiquiconnect Team."
 				WhatsAppMessage.send_whatsapp_message(receiver_list=[receiver_whatsapp_no],message=msg,doctype="Vehicle Registration Certificate",docname=row.get('vehicle_no'))
