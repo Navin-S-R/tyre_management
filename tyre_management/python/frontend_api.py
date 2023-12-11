@@ -403,9 +403,9 @@ def get_unprocessed_not_moving_vehicles(threshold_minutes=20):
 						row['customer_name'] = vehicle_details.get('customer')
 						row['customer_email'] = party_details.get('mail_to_receive_alert')
 						row['customer_whatsapp']=party_details.get('whatsapp_number')
-						row['driver_email']=driver_details.get('email') or None
-						row['driver_mobile']=driver_details.get('mobile_no') or None
-						row['driver_name']=driver_details.get('full_name') or None
+						row['driver_email']=driver_details.get('email') if driver_details else None
+						row['driver_mobile']=driver_details.get('mobile_no') if driver_details else None
+						row['driver_name']=driver_details.get('full_name') if driver_details else None
 						unprocessed_vehicle_list.append(row)
 			return unprocessed_vehicle_list
 	else:
