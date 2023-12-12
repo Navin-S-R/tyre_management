@@ -86,7 +86,7 @@ def send_preventive_maintenance_completion_alert():
 														"maintenance_type":"Preventive Maintenance",
 														"time_stamp": ["between", [start_datetime, end_datetime]],
 														"alert_details":["not in",["Preventive Maintenance"]],
-														"serial_no" : ["in",row_value.get('tyre_serial_no')],
+														"serial_no" : ["in",tyre_serial_no_list],
 														"vehicle_no" : key,
 														"docstatus":1
 													},

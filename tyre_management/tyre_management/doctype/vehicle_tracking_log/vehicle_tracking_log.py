@@ -79,7 +79,7 @@ class VehicleTrackingLog(Document):
 
 
 		#['Layover','FasTag','Accident','Fuel'] Direct submission
-		if self.issue_based_on in ['Layover','FasTag','Accident','Fuel']:
+		if self.issue_based_on in ['Layover','FasTag','Accident','Fuel'] or self.docstatus==1:
 			if not self.end_time:
 				self.end_time = frappe.utils.now()
 			self.docstatus=1
@@ -122,7 +122,7 @@ class VehicleTrackingLog(Document):
 							receiver_whatsapp_no = "+91"+party_details.get('whatsapp_number')
 							receiver_whatsapp_no.replace(" ","")
 						if receiver_whatsapp_no:
-							alert_msg=f"Dear {self.customer},\n\nGreeting from Liquiconnect Team!\n\nyour vehicle number {self.vehicle_no} had a breakdown and it was resolved.\n\nThe cost involved to resolve : {self.cost_involved}\n\nThanks,\nLiquiconnect Team."
+							alert_msg=f"Dear {self.customer},\n\nGreeting from Liquiconnect Team!\n\nyour vehicle number {self.vehicle_no} had a breakdown and it was resolved.\n\nThe cost involved to resolve : {str(self.cost_involved)}\n\nThe duration for the breakdown was : {str(round(self.duration_in_mins,0))} minutes\n\nThanks,\nLiquiconnect Team."
 							send_whatsapp_msg(receiver_whatsapp_no,alert_msg,self.doctype,self.name)
 
 # Send Initial Request MSG
@@ -140,9 +140,10 @@ def send_whatsapp_msg_to_driver(threshold_minutes=20):
 				msg = f"Dear {row.get('driver_name')},\n\nGreeting from Liquiconnect Team!\n\nYour vehicle {row.get('vehicle_no')} is standing in the same place for about {threshold_minutes} minutes,\n\nPlease report the issue on the below link.\n\n"
 				msg+=f"{frappe.utils.get_url()}/vehicle-tracking-log?new=1&&vehicle_no={row.get('vehicle_no')}"
 				if row.get('geo_location_str'):
-					msg+=f"&&location_details={quote(row.get('geo_location'))}"
+					msg+=f"&&location_details={quote(row.get('geo_location_str'))}"
 				msg+="\n\nThanks,\nLiquiconnect Team."
 				WhatsAppMessage.send_whatsapp_message(receiver_list=[receiver_whatsapp_no],message=msg,doctype="Vehicle Registration Certificate",docname=row.get('vehicle_no'))
+				break
 
 def send_whatsapp_msg_to_process():
 	need_to_process_list=frappe.get_all("Vehicle Tracking Log",{"docstatus":0,"status":['in',['Breakdown']],'driver_alert':['in',None]},['name','vehicle_no'])
