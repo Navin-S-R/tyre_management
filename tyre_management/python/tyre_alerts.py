@@ -16,8 +16,8 @@ def send_preventive_maintenance_completion_alert():
 	# alerts to the vehicle owners via WhatsApp. The code also updates the alert details for the
 	# maintenance records in the database.
 	vehicle_list=[]
-	time_change_start=datetime.timedelta(hours=28)
-	time_change_end=datetime.timedelta(hours=1)
+	time_change_start=datetime.timedelta(hours=24)
+	time_change_end=datetime.timedelta(hours=0)
 	start_datetime=(datetime.datetime.now()-time_change_start)
 	end_datetime=(datetime.datetime.now() - time_change_end)
 	maintenance_alert_list = frappe.get_all("Tyre Maintenance",
