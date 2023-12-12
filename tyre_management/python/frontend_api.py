@@ -419,3 +419,18 @@ def get_linked_tracking_doc(vehicle):
 				},["name","status","vehicle_no","customer","issue_based_on",
 					"reason_for_breakdown","time_spent_on","workshop"])
 	return doc_list
+
+@frappe.whitelist()
+def get_vehicle_liked_tires(vehicle):
+	serial_no_fields = [
+		"front_left_1", "front_right_1", "middle_left_1", "middle_left_2", "middle_right_1", "middle_right_2",
+		"middle_left_3", "middle_left_4", "middle_right_3", "middle_right_4", "rear_left_1", "rear_left_2",
+		"rear_right_1", "rear_right_2", "rear_left_3", "rear_left_4", "rear_right_3", "rear_right_4",
+		"spare_1", "spare_2"
+	]
+	data = frappe.get_all("Vehicle Tire Position", {"vehicle_no": vehicle}, serial_no_fields,
+							order_by="modified desc", limit=1)
+	if data:
+		return data
+	else:
+		return "Vehicle have no tire position information"

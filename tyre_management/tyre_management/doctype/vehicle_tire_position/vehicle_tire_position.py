@@ -38,7 +38,7 @@ class VehicleTirePosition(Document):
 					values = "SET ref_doctype='{0}', vehicle_no='{1}',vehicle_tire_position='{2}',tyre_status='Installed'".format(self.ref_doctype,self.vehicle_no,self.name)
 					if not serial_doc_details.get('installed_datetime'):
 						values+=",installed_datetime='{0}' ".format(self.time_stamp)
-					frappe.db.sql("""UPDATE `tabTyre Serial No` 
+					frappe.db.sql("""UPDATE `tabTyre Serial No`
 										{0}
 										where name='{1}'
 								""".format(values,self.get(field)))
@@ -57,7 +57,7 @@ class VehicleTirePosition(Document):
 				#Updating the tyre status and operational_end_date
 				for removed_tyre in removed_tyres:
 					frappe.db.sql("UPDATE `tabTyre Serial No` SET operational_end_date='{0}',tyre_status='Operation Ended' WHERE name='{1}'".format(self.time_stamp,removed_tyre))
-		
+
 	def validate(self):
 		#Same Serial No validation #Tyre Active in other vehicles
 		serial_no_fields = [
@@ -89,7 +89,7 @@ class VehicleTirePosition(Document):
 			for j in serial_no_fields:
 				if check_field != None and check_field == self.get(j) and i != j:
 					frappe.throw(_(f"{i} and {j} have same tyre"))
-		
+
 		#wheel level validation
 		if self.wheels == 4:
 			tire_fields = [
@@ -157,7 +157,7 @@ class VehicleTirePosition(Document):
 				previously_installed_vehicle=frappe.db.get_value("Tyre Serial No",{"name":self.get(tire),"tyre_status":"Installed"},"vehicle_no")
 				if previously_installed_vehicle and previously_installed_vehicle != self.vehicle_no:
 					frappe.throw(_(f"{previously_installed_vehicle} have same tyre installed"))
-		
+
 		if self.wheels == 12:
 			tire_fields = [
 				"front_left_1",
