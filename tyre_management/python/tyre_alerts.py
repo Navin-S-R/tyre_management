@@ -60,8 +60,9 @@ def send_preventive_maintenance_completion_alert():
 							ref_document_actual=key
 
 							tyre_serial_no_list=[]
-							tyre_msg=f"Dear {vehicle_details.get('customer')},\n\nGreeting from Liquiconnect Team!\n\nFor your vehicle number {key}, the preventive maintenance was done on {today()}, the necessary information is as follows.\n\n"
+							tyre_msg=f"Dear {vehicle_details.get('customer')},\n\nGreeting from Liquiconnect Team!\n\nFor your vehicle number {key}, the tyre preventive maintenance was done on {today()}, the necessary information is as follows.\n\n"
 							tyre_count=0
+							total_cost=0
 							nsd_value_details=[]
 							tyre_health = ""
 							for row_value in value:
@@ -80,6 +81,18 @@ def send_preventive_maintenance_completion_alert():
 								tyre_msg += "\n\n"
 								tyre_serial_no_list.append(str(row_value.get('tyre_serial_no')))
 								tyre_count+=1
+								vehicle_costing = frappe.get_all("Tyre Maintenance",
+													{
+														"maintenance_type":"Preventive Maintenance",
+														"time_stamp": ["between", [start_datetime, end_datetime]],
+														"alert_details":["not in",["Preventive Maintenance"]],
+														"serial_no" : ["in",row_value.get('tyre_serial_no')],
+														"vehicle_no" : key,
+														"docstatus":1
+													},
+													pluck="cost")
+								if vehicle_costing:
+									total_cost=sum(vehicle_costing)
 								if row_value.get('nsd_value') and float(row_value.get('nsd_value')) <= 4:
 									nsd_value_details.append(
 										{
@@ -89,6 +102,7 @@ def send_preventive_maintenance_completion_alert():
 									)
 								if tyre_count == 8:
 									tyre_count = 0
+									tyre_msg += f"The cost for this preventive maintenance service is {str(total_cost)}.\n\n"
 									tyre_msg += "Thanks,\nLiquiconnect Team."
 									send_whatsapp_msg(receiver_whatsapp_no=receiver_whatsapp_no,
 										tyre_msg=tyre_msg,
@@ -97,6 +111,7 @@ def send_preventive_maintenance_completion_alert():
 									)
 									tyre_msg=f"Dear {vehicle_details.get('customer')},\n\nGreeting from Liquiconnect Team!\n\nFor your vehicle number {key}, the preventive maintenance was done on {today()}, the necessary information is as follows.\n\n"
 							if tyre_count>0:
+								tyre_msg += f"The cost for this preventive maintenance service is {str(total_cost)}.\n\n"
 								tyre_msg += "Thanks,\nLiquiconnect Team."
 								send_whatsapp_msg(receiver_whatsapp_no=receiver_whatsapp_no,
 										tyre_msg=tyre_msg,
