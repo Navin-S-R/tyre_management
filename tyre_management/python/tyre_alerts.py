@@ -213,11 +213,11 @@ def send_alert_for_preventive_maintenance_needed():
 										last_preventive_maintenance_date=None
 										if row.get('last_preventive_maintenance_date') and isinstance(row.get('last_preventive_maintenance_date'), datetime.datetime):
 											last_preventive_maintenance_date = row.get('last_preventive_maintenance_date').strftime("%Y-%m-%d")
-										tyre_msg=f"Dear {row.get('customer')},\n\nGreeting from Liquiconnect Team!\n\n"
-										tyre_msg += f"Last maintenance date : {last_preventive_maintenance_date}\n\n"
-										tyre_msg += f"Odometer reading last PM: {row.get('vehicle_odometer_value_at_service')}\n\n"
-										tyre_msg += f"Odometer present reading: {row.get('kms_travelled_without_checkup')}\n\n"
-										tyre_msg += f"Km travelled in duration: {row.get('current_odometer_value')}\n\n"
+										tyre_msg=f"Dear {row.get('customer')},\n\nGreeting from Liquiconnect Team!\n\nYour vehicle is due for Preventive maintenance\n\n"
+										tyre_msg += f"Last maintenance date : {str(last_preventive_maintenance_date)}\n\n"
+										tyre_msg += f"Odometer reading last PM: {str(row.get('vehicle_odometer_value_at_service'))}\n\n"
+										tyre_msg += f"Odometer present reading: {str(row.get('kms_travelled_without_checkup'))}\n\n"
+										tyre_msg += f"Km travelled in duration: {str(row.get('current_odometer_value'))}\n\n"
 										tyre_msg += "Thanks,\nLiquiconnect Team."
 										WhatsAppMessage.send_whatsapp_message(receiver_list=[receiver_whatsapp_no],message=tyre_msg,doctype="Customer",docname=row.get('customer'))
 										break
