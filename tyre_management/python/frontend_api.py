@@ -428,8 +428,9 @@ def get_vehicle_linked_tires(vehicle):
 		"rear_right_1", "rear_right_2", "rear_left_3", "rear_left_4", "rear_right_3", "rear_right_4",
 		"spare_1", "spare_2"
 	]
-	data = frappe.db.get_value("Vehicle Tire Position", {"vehicle_no": vehicle}, serial_no_fields)
-	if data:
-		return data
+	serial_no_data = frappe.db.get_value("Vehicle Tire Position", {"vehicle_no": vehicle}, serial_no_fields,as_dict=True)
+	if serial_no_data and isinstance(serial_no_data, dict):
+		filtered_data = [value for value in serial_no_data.values() if value != "null" and value is not None]
+		return filtered_data
 	else:
 		return "Vehicle have no tire position information"
