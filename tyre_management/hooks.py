@@ -107,8 +107,8 @@ doc_events = {
 scheduler_events = {
 	"cron": {
 		"*/3 * * * *": [
-			"tyre_management.tyre_management.doctype.tyre_serial_no.tyre_serial_no.update_field_from_serial_no",
-			"tyre_management.tyre_management.doctype.vehicle_tracking_log.vehicle_tracking_log.send_whatsapp_msg_to_driver"
+			"tyre_management.tyre_management.doctype.tyre_serial_no.tyre_serial_no.update_field_from_serial_no"
+			#"tyre_management.tyre_management.doctype.vehicle_tracking_log.vehicle_tracking_log.send_whatsapp_msg_to_driver"
 		],
 		"*/4 * * * *": [
 			"tyre_management.python.tyre_alerts.send_preventive_maintenance_completion_alert"

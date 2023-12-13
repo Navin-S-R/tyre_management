@@ -157,11 +157,11 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "alert_details",
    "fieldtype": "Data",
    "label": "Alert Details",
-   "no_copy": 1,
-   "read_only": 1
+   "no_copy": 1
   },
   {
    "fieldname": "ref_tracking_log",
@@ -173,7 +173,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-07 10:30:46.495285",
+ "modified": "2023-12-13 14:32:28.611555",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Maintenance",

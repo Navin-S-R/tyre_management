@@ -271,7 +271,7 @@ def get_tyres_need_service_nsd_based(customer):
 								'tyre_pressure' : row.get('Pres'),
 								'tyre_temperature' : row.get('Temp'),
 								'nsd_value' : nsd_value,
-								'kms_travelled_without_checkup' : 12000,
+								'kms_travelled_without_checkup' : kms_driven_without_checkup,
 								'current_odometer_value' : current_odometer_value or 0,
 								'total_tyre_mileage' : current_odometer_value-tyre_serial_details.get('odometer_value_at_installation') or 0,
 								'last_preventive_maintenance_date' : tyre_maintenance_details.get('time_stamp'),
