@@ -18,6 +18,8 @@
   "attach_document",
   "attach_document_link",
   "attach_img_byte",
+  "attach_img_name",
+  "attach_img_extension",
   "section_break_jdbqc",
   "maintenance_type",
   "serial_no",
@@ -168,12 +170,24 @@
    "fieldtype": "Link",
    "label": "Ref Tracking Log",
    "options": "Vehicle Tracking Log"
+  },
+  {
+   "fieldname": "attach_img_name",
+   "fieldtype": "Small Text",
+   "label": "Attach Img Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "attach_img_extension",
+   "fieldtype": "Data",
+   "label": "Attach Img Extension",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-13 14:32:28.611555",
+ "modified": "2023-12-27 14:01:22.203803",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Maintenance",

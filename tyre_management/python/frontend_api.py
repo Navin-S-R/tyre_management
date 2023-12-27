@@ -389,11 +389,13 @@ def get_unprocessed_not_moving_vehicles(threshold_minutes=20):
 		response=response.json().get('message')
 		if response:
 			unprocessed_vehicle_list=[]
+			under_process_vehicles=[]
 			time_change=timedelta(minutes=40)
 			end_datetime=(datetime.now()-time_change)
-			processed_vehicles=frappe.get_all("Vehicle Tracking Log",{'docstatus':0,"end_time":[">=",end_datetime]},pluck="name")
+			under_process_vehicles+=frappe.get_all("Vehicle Tracking Log",{'docstatus':1,"end_time":[">=",end_datetime]},pluck="vehicle_no")
+			under_process_vehicles+=frappe.get_all("Vehicle Tracking Log",{'docstatus':0},pluck="vehicle_no")
 			for row in response:
-				if not row in processed_vehicles:
+				if not row.get('vehicle_no') in under_process_vehicles:
 					vehicle_details=frappe.db.get_value("Vehicle Registration Certificate",{"name":row.get('vehicle_no')},['customer'],as_dict=True)
 					if vehicle_details:
 						party_details=frappe.db.get_value("Customer",{"name":vehicle_details.get('customer')},['mail_to_receive_alert','whatsapp_number','name'],as_dict=True)
