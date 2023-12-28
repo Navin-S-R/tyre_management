@@ -29,8 +29,16 @@ class TyreMaintenance(Document):
 				file_doc.attached_to_doctype = self.doctype
 				file_doc.attached_to_name = self.name
 				file_doc.insert(ignore_permissions=True)
-				self.attach_document = file_doc.file_url
-				self.db_set("attach_document", self.attach_document)
+				frappe.db.sql("""
+							update `tabTyre Maintenance`
+								set
+									attach_document='{0}',
+									attach_document_link='{1}',
+									attach_img_byte=NULL,
+									attach_img_extension=NULL,
+									attach_img_name=NULL
+								where name='{2}'
+							""".format(file_doc.file_url,frappe.utils.get_url()+file_doc.file_url,self.name))
 
 	def validate(self):
 		tyre_position = frappe.get_value("Vehicle Tire Position",{"ref_doctype":self.ref_doctype,
