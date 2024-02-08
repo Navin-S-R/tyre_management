@@ -17,9 +17,6 @@
   "vehicle_tire_position",
   "attach_document",
   "attach_document_link",
-  "attach_img_byte",
-  "attach_img_name",
-  "attach_img_extension",
   "section_break_jdbqc",
   "maintenance_type",
   "serial_no",
@@ -151,14 +148,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "attach_img_byte",
-   "fieldtype": "Small Text",
-   "hidden": 1,
-   "label": "Attach Img Byte",
-   "no_copy": 1,
-   "read_only": 1
-  },
-  {
    "allow_on_submit": 1,
    "fieldname": "alert_details",
    "fieldtype": "Data",
@@ -170,24 +159,12 @@
    "fieldtype": "Link",
    "label": "Ref Tracking Log",
    "options": "Vehicle Tracking Log"
-  },
-  {
-   "fieldname": "attach_img_name",
-   "fieldtype": "Small Text",
-   "label": "Attach Img Name",
-   "read_only": 1
-  },
-  {
-   "fieldname": "attach_img_extension",
-   "fieldtype": "Data",
-   "label": "Attach Img Extension",
-   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-27 14:01:22.203803",
+ "modified": "2024-02-08 14:02:20.881459",
  "modified_by": "Administrator",
  "module": "Tyre Management",
  "name": "Tyre Maintenance",

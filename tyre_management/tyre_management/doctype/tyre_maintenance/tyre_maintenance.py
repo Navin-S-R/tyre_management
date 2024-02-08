@@ -12,34 +12,6 @@ import requests
 from tyre_management.python.frontend_api import get_smart_tyre_data_bulk
 
 class TyreMaintenance(Document):
-	def after_insert(self):
-		if self.vehicle_no:
-			if self.attach_img_byte:
-				if not self.attach_img_extension:
-					frappe.throw("Please mention the extension of the attachment")
-				byte = self.attach_img_byte
-				img_details = (parse_naming_series(f'{self.attach_img_name}-.#####') or now()) + "." + self.attach_img_extension
-				path = f"{get_site_path()}/public/files/" + img_details
-				decodeit = open(path, 'wb')
-				decodeit.write(base64.b64decode(byte))
-				decodeit.close()
-				file_doc = frappe.new_doc("File")
-				file_doc.file_url = "/files/"+img_details
-				file_doc.is_private = 0
-				file_doc.attached_to_doctype = self.doctype
-				file_doc.attached_to_name = self.name
-				file_doc.insert(ignore_permissions=True)
-				frappe.db.sql("""
-							update `tabTyre Maintenance`
-								set
-									attach_document='{0}',
-									attach_document_link='{1}',
-									attach_img_byte=NULL,
-									attach_img_extension=NULL,
-									attach_img_name=NULL
-								where name='{2}'
-							""".format(file_doc.file_url,frappe.utils.get_url()+file_doc.file_url,self.name))
-
 	def validate(self):
 		tyre_position = frappe.get_value("Vehicle Tire Position",{"ref_doctype":self.ref_doctype,
 																		"docstatus" : 1,
