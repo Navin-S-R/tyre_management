@@ -324,12 +324,11 @@ def get_location_for_lat_lng(lat, lng):
 	:return: a JSON response containing location information for the given latitude and longitude
 	coordinates.
 	"""
-	url = f"https://geocode.maps.co/reverse?lat={lat}&lon={lng}"
+	url = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lng}&format=json"
 	response = requests.request("GET", url, headers={}, data={})
 	if response.ok:
 		response=response.json()
 		response.pop('licence')
-		response.pop('powered_by')
 		response.pop('osm_type')
 		response.pop('osm_id')
 		return response
